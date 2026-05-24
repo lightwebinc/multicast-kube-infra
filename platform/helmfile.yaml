@@ -49,8 +49,8 @@ releases:
   - name: multus
     namespace: kube-system
     # k8snetworkplumbingwg does not publish a Helm repo index; pull the chart
-    # directly from the git tree. helmfile resolves git+https URLs via go-getter.
-    chart: git::https://github.com/k8snetworkplumbingwg/helm-charts.git@multus?ref=master
+    # directly from the git tree via go-getter (double-slash = subdirectory).
+    chart: git::https://github.com/k8snetworkplumbingwg/helm-charts.git//multus?ref=master
     labels:
       layer: multus
     values:
