@@ -10,6 +10,12 @@ k0s-config.yaml
 *.local.yaml
 production.yaml
 secrets/
+!platform/secrets/
+platform/secrets/*
+!platform/secrets/*.example.yaml
+!platform/secrets/README.md
+!platform/secrets/external-secrets/
+!platform/secrets/external-secrets/*.gotmpl
 *.local.env
 
 # Helm / Helmfile artefacts

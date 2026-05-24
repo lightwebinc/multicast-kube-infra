@@ -18,6 +18,11 @@ repositories:
     url: https://helm.cilium.io
   - name: external-secrets
     url: https://charts.external-secrets.io
+  # k8snetworkplumbingwg does not publish a Helm repo index. Use the helm-git
+  # plugin (installed by `helmfile init --force`) to fetch the chart directly
+  # from the multus subdirectory of their helm-charts git tree.
+  - name: multus-git
+    url: git+https://github.com/k8snetworkplumbingwg/helm-charts@multus?ref=master&sparse=0
 
 releases:
   # ------------------------------------------------------------------ CNI
@@ -48,9 +53,7 @@ releases:
   # ------------------------------------------------------------- Multus
   - name: multus
     namespace: kube-system
-    # k8snetworkplumbingwg does not publish a Helm repo index; pull the chart
-    # directly from the git tree via go-getter (double-slash = subdirectory).
-    chart: git::https://github.com/k8snetworkplumbingwg/helm-charts.git//multus?ref=master
+    chart: multus-git/multus
     labels:
       layer: multus
     values:

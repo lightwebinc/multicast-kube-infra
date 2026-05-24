@@ -12,7 +12,9 @@ fail() { echo "FAIL: $*" >&2; ok=1; }
 echo "==> shellcheck"
 if command -v shellcheck >/dev/null 2>&1; then
   # SC1091: source paths only resolvable at runtime.
-  shellcheck -e SC1091 -e SC2086 \
+  # SC2086: word-splitting is intentional for argv-style variables.
+  # SC2153: NODE{0,1,2}_ADDR are sourced at runtime from hosts.env (gitignored).
+  shellcheck -e SC1091 -e SC2086 -e SC2153 \
     distributions/k0s/bootstrap.sh \
     distributions/k0s/teardown.sh  \
     scripts/*.sh || fail shellcheck
