@@ -7,12 +7,11 @@ config:
   mcScope: {{ .Values.shared.mcScope | quote }}
   mcGroupId: {{ .Values.shared.mcGroupId | quote }}
   listenPort: {{ .Values.shared.dataPort }}
-  retryEndpoints: >-
-    {{- $eps := list -}}
-    {{- range .Values.retryEndpoints -}}
-      {{- $eps = append $eps (printf "[%s]:%d" .nackAddr (int $.Values.shared.beaconPort)) -}}
-    {{- end -}}
-    {{ join "," $eps }}
+  {{- $eps := list }}
+  {{- range .Values.retryEndpoints }}
+    {{- $eps = append $eps (printf "[%s]:%d" .nackAddr (int $.Values.shared.beaconPort)) }}
+  {{- end }}
+  retryEndpoints: {{ join "," $eps | quote }}
   beaconPort: {{ .Values.shared.beaconPort }}
   beaconScope: {{ .Values.shared.mcScope | quote }}
   # numWorkers is hardcoded to 1 by the chart (SO_REUSEPORT mcast duplication).

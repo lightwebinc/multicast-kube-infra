@@ -16,8 +16,6 @@ repositories:
     url: https://docs.tigera.io/calico/charts
   - name: cilium
     url: https://helm.cilium.io
-  - name: k8snetworkplumbingwg
-    url: https://k8snetworkplumbingwg.github.io/helm-charts
   - name: external-secrets
     url: https://charts.external-secrets.io
 
@@ -50,8 +48,9 @@ releases:
   # ------------------------------------------------------------- Multus
   - name: multus
     namespace: kube-system
-    chart: k8snetworkplumbingwg/multus
-    version: 0.0.4
+    # k8snetworkplumbingwg does not publish a Helm repo index; pull the chart
+    # directly from the git tree. helmfile resolves git+https URLs via go-getter.
+    chart: git::https://github.com/k8snetworkplumbingwg/helm-charts.git@multus?ref=master
     labels:
       layer: multus
     values:
