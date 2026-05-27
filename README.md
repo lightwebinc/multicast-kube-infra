@@ -1,8 +1,9 @@
 # multicast-kube-infra
 
 Kubernetes deployment infrastructure for the Bitcoin multicast transaction-distribution stack
-(`shard-proxy`, `shard-listener`, `retry-endpoint`,
-`subtx-generator`).
+(`shard-proxy`, `shard-listener`, `retry-endpoint`, `subtx-generator`). The
+BRC-137 announcer (`shard-manifest`) ships as its own chart and is deployed
+alongside participants — see [`docs/architecture.md`](docs/architecture.md).
 
 This repo is **distribution-agnostic**: the cluster bring-up lives under
 `distributions/<dist>/`, while the platform addons (`platform/`) and the application
@@ -38,7 +39,7 @@ idempotent — re-running converges to desired state.
 | `platform/multus/`       | Multus CNI install. |
 | `platform/nads/`          | `NetworkAttachmentDefinition` templates (`mcast-fabric`, `bgp-transit`, `bgp-ibgp`). |
 | `platform/secrets/`      | External Secrets Operator + `ClusterSecretStore` stub. |
-| `apps/`                   | Helmfile composing the four bitcoin charts. |
+| `apps/`                   | Helmfile composing the data-plane bitcoin charts (proxy/listener/retry/subtx-gen). |
 | `argocd/`                 | Stub for future ApplicationSet adoption. |
 | `scripts/`                | Operator entry points (called from the Makefile). |
 | `docs/`                   | Architecture, quickstart, networking, secrets, ops, troubleshooting. |

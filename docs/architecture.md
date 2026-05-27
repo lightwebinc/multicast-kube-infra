@@ -45,10 +45,25 @@ See [`../distributions/common.md`](../distributions/common.md). Summary:
 
 ## Application layer
 
-`apps/helmfile.yaml` installs the four bitcoin charts (`shard-proxy`,
-`shard-listener`, `retry-endpoint`, `subtx-generator`)
-from OCI. Per-node retry-endpoint releases are generated from the values list,
-matching `composition-spec.md` Option A in the upstream docs.
+`apps/helmfile.yaml` installs the data-plane bitcoin charts (`shard-proxy`,
+`shard-listener`, `retry-endpoint`, `subtx-generator`) from OCI. Per-node
+retry-endpoint releases are generated from the values list, matching
+`composition-spec.md` Option A in the upstream docs.
+
+The `shard-manifest` daemon (BRC-137 announcer) has its own chart at
+[`shard-manifest-helm`](https://github.com/lightwebinc/shard-manifest-helm)
+and is intentionally **not** wired into the default `apps/helmfile.yaml` —
+it runs alongside each data-plane participant rather than as a shared
+service. Operators wire it in per their topology, or deploy it to VMs via
+[`manifest-infra`](https://github.com/lightwebinc/manifest-infra).
+
+Chart source repositories:
+
+- [`shard-proxy-helm`](https://github.com/lightwebinc/shard-proxy-helm)
+- [`shard-listener-helm`](https://github.com/lightwebinc/shard-listener-helm)
+- [`retry-endpoint-helm`](https://github.com/lightwebinc/retry-endpoint-helm)
+- [`subtx-generator-helm`](https://github.com/lightwebinc/subtx-generator-helm)
+- [`shard-manifest-helm`](https://github.com/lightwebinc/shard-manifest-helm)
 
 ## Reference topology
 
