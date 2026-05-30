@@ -54,17 +54,25 @@ k0sctl kubeconfig --config k0sctl.yaml > "${KUBECONFIG_PATH}"
 chmod 600 "${KUBECONFIG_PATH}"
 
 # Apply multicast sysctls on every host. Idempotent.
+#
+# MLD_MAX_MSF defaults to 1024 (≥ 2× expected publisher fleet size).
+# Operators targeting Posture B/C/D (SSM) at scale should override via
+# the MLD_MAX_MSF env var; the Linux default of 64 is below production
+# requirements and causes MCAST_JOIN_SOURCE_GROUP to return ENOBUFS.
 apply_sysctls() {
   local host="$1" iface="$2"
+  local mld_max_msf="${MLD_MAX_MSF:-1024}"
   ssh -i "${SSH_KEY}" -o StrictHostKeyChecking=accept-new "${SSH_USER}@${host}" \
     "sudo sh -c '
       sysctl -w net.ipv6.conf.all.disable_ipv6=0 >/dev/null
       sysctl -w net.ipv6.conf.${iface}.disable_ipv6=0 >/dev/null
       sysctl -w net.ipv6.conf.all.force_mld_version=2 >/dev/null
+      sysctl -w net.ipv6.mld_max_msf=${mld_max_msf} >/dev/null
       cat > /etc/sysctl.d/80-bsv-mcast.conf <<EOF
 net.ipv6.conf.all.disable_ipv6 = 0
 net.ipv6.conf.${iface}.disable_ipv6 = 0
 net.ipv6.conf.all.force_mld_version = 2
+net.ipv6.mld_max_msf = ${mld_max_msf}
 EOF
     '"
 }
