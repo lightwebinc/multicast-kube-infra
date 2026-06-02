@@ -77,10 +77,46 @@ EOF
     '"
 }
 
+# Apply perf-tuning sysctls (UDP buffers, busy-poll, backlog) on every host.
+# Measured to gain +7.3% on the 256 B Bitcoin P2PKH hot path; see
+# multicast-skills/performance-testing.md for the methodology. Reboot is
+# required separately for intel_idle.max_cstate=1; we set sysfs C-states
+# at apply time so the running kernel uses shallow idle until next boot.
+apply_perf_tuning() {
+  local host=\"\$1\"
+  ssh -i \"\${SSH_KEY}\" -o StrictHostKeyChecking=accept-new \"\${SSH_USER}@\${host}\" \
+    'sudo sh -c "
+      cat > /etc/sysctl.d/81-bsv-perf.conf <<EOF
+net.core.rmem_max = 268435456
+net.core.rmem_default = 67108864
+net.core.wmem_max = 268435456
+net.core.wmem_default = 67108864
+net.core.optmem_max = 33554432
+net.core.netdev_max_backlog = 1000000
+net.core.busy_poll = 50
+net.core.busy_read = 50
+EOF
+      sysctl --quiet --load /etc/sysctl.d/81-bsv-perf.conf
+      systemctl stop irqbalance 2>/dev/null || true
+      systemctl mask irqbalance 2>/dev/null || true
+      for cpu in /sys/devices/system/cpu/cpu[0-9]*; do
+        for n in 3 4 5 6 7 8 9 10; do
+          f=\"\$cpu/cpuidle/state\${n}/disable\"
+          [ -w \"\$f\" ] && echo 1 > \"\$f\" || true
+        done
+      done
+    "'
+}
+
 echo "==> apply multicast sysctls"
 apply_sysctls "${NODE0_ADDR}" "${NODE0_FABRIC_IFACE}"
 [[ -n "${NODE1_ADDR:-}" ]] && apply_sysctls "${NODE1_ADDR}" "${NODE1_FABRIC_IFACE}"
 [[ -n "${NODE2_ADDR:-}" ]] && apply_sysctls "${NODE2_ADDR}" "${NODE2_FABRIC_IFACE}"
+
+echo "==> apply perf-tuning sysctls"
+apply_perf_tuning "${NODE0_ADDR}"
+[[ -n "${NODE1_ADDR:-}" ]] && apply_perf_tuning "${NODE1_ADDR}"
+[[ -n "${NODE2_ADDR:-}" ]] && apply_perf_tuning "${NODE2_ADDR}"
 
 echo "==> wait for nodes Ready"
 KUBECONFIG="${KUBECONFIG_PATH}" kubectl wait --for=condition=Ready nodes --all --timeout=300s
