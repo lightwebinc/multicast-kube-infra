@@ -83,9 +83,9 @@ EOF
 # required separately for intel_idle.max_cstate=1; we set sysfs C-states
 # at apply time so the running kernel uses shallow idle until next boot.
 apply_perf_tuning() {
-  local host=\"\$1\"
-  ssh -i \"\${SSH_KEY}\" -o StrictHostKeyChecking=accept-new \"\${SSH_USER}@\${host}\" \
-    'sudo sh -c "
+  local host="$1"
+  ssh -i "${SSH_KEY}" -o StrictHostKeyChecking=accept-new "${SSH_USER}@${host}" \
+    "sudo sh -c '
       cat > /etc/sysctl.d/81-bsv-perf.conf <<EOF
 net.core.rmem_max = 268435456
 net.core.rmem_default = 67108864
@@ -101,11 +101,11 @@ EOF
       systemctl mask irqbalance 2>/dev/null || true
       for cpu in /sys/devices/system/cpu/cpu[0-9]*; do
         for n in 3 4 5 6 7 8 9 10; do
-          f=\"\$cpu/cpuidle/state\${n}/disable\"
+          f=\"\$cpu/cpuidle/state\$n/disable\"
           [ -w \"\$f\" ] && echo 1 > \"\$f\" || true
         done
       done
-    "'
+    '"
 }
 
 echo "==> apply multicast sysctls"
