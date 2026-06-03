@@ -79,6 +79,19 @@ The charts ship `ServiceMonitor` templates (gated by
 `metrics.serviceMonitor.enabled=false` by default) for clusters running
 `kube-prometheus-stack`. This repo does **not** install Prometheus/Grafana.
 
+## Logging
+
+Each component chart exposes unified-logging values (`config.logFormat`,
+`config.logLevel`, `config.traceSampling`; `manifest.*` / top-level `logFormat`
+for the manifest and generator charts). Set `logFormat: json` for one-JSON-
+object-per-line stdout that a node-local collector can ship; the log level is
+runtime-togglable via `POST /loglevel` on the metrics port and SIGHUP. Each pod
+emits a one-shot `host.inventory` event and a `<prefix>_host_info` gauge at
+startup. The **log collector** (the decided architecture is a Grafana Alloy
+DaemonSet → OTLP → Loki) and **node_exporter** are a deferred rollout — like
+Prometheus/Grafana, this repo does not install them. See the
+[Unified Logging Plan](https://github.com/lightwebinc/bsv-multicast/blob/main/docs/UnifiedLogging/unified-logging-plan.md).
+
 ## Backups
 
 State is minimal:
