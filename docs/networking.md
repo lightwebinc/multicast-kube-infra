@@ -133,3 +133,15 @@ When `EGRESS_MODE=unicast-list` lands in the proxy, the entire stack can run
 on a standard CNI (no Multus, no `hostNetwork`). The `apps/helmfile.yaml`
 setting `networkingMode: unicast` will switch the rendered chart values; the
 platform layer can then skip the Multus and NADs releases on EKS.
+
+## Cache backends (Redis / Aerospike)
+
+The proxy/listener dedup gates and the retry-endpoint frame cache use the
+modular `shard-common/cache` backend, selected per-chart (`config.txidDedup.backend`,
+`config.egressDedupBackend` / `config.ingressSetBackend`, `config.cacheBackend`).
+Deploy the backend as a separate in-cluster workload (e.g. a Redis/Valkey
+StatefulSet, or an Aerospike Community Edition StatefulSet) on the pod network
+and point the chart values at its Service DNS name. Aerospike needs a
+provisioned namespace and uses whole-second TTLs (floor 1s). Backend errors fail
+open. See
+[ModularCacheBackend](https://github.com/lightwebinc/bsv-multicast/blob/main/docs/ModularCacheBackend/modular-cache-backend.md).
