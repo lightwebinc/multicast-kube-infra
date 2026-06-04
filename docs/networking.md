@@ -144,4 +144,4 @@ StatefulSet, or an Aerospike Community Edition StatefulSet) on the pod network
 and point the chart values at its Service DNS name. Aerospike needs a
 provisioned namespace and uses whole-second TTLs (floor 1s). Backend errors fail
 open. See
-[ModularCacheBackend](https://github.com/lightwebinc/bsv-multicast/blob/main/docs/ModularCacheBackend/modular-cache-backend.md).
+[shard-common cache backend](https://github.com/lightwebinc/shard-common/blob/main/docs/cache-backend.md).

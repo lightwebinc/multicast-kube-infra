@@ -90,7 +90,7 @@ emits a one-shot `host.inventory` event and a `<prefix>_host_info` gauge at
 startup. The **log collector** (the decided architecture is a Grafana Alloy
 DaemonSet → OTLP → Loki) and **node_exporter** are a deferred rollout — like
 Prometheus/Grafana, this repo does not install them. See the
-[Unified Logging Plan](https://github.com/lightwebinc/bsv-multicast/blob/main/docs/UnifiedLogging/unified-logging-plan.md).
+[Unified Logging Plan](https://github.com/lightwebinc/shard-common/blob/main/docs/logging.md).
 
 ## Backups
 
