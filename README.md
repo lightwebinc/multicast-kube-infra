@@ -1,5 +1,7 @@
 # multicast-kube-infra
 
+> Part of the [**BSV Layered Multicast**](https://github.com/lightwebinc/bsv-multicast) open-source project — see the main repository for the full architecture, design docs, and BRC specifications.
+
 Kubernetes deployment infrastructure for the Bitcoin multicast transaction-distribution stack
 (`shard-proxy`, `shard-listener`, `retry-endpoint`, `subtx-generator`). The
 BRC-137 announcer (`shard-manifest`) ships as its own chart and is deployed
