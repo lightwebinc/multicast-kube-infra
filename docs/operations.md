@@ -97,11 +97,11 @@ Prometheus/Grafana, this repo does not install them. See the
 State is minimal:
 
 | Component | State | Backup needed? |
-|---|---|---|
-| proxy             | none (stateless) | no |
-| listener          | per-pod gap tracker (in-memory) | no |
-| retry-endpoint    | freecache (in-memory) or external Redis | external Redis only |
-| subtx-generator   | none | no |
+| --- | --- | --- |
+| proxy | none (stateless) | no |
+| listener | per-pod gap tracker (in-memory) | no |
+| retry-endpoint | in-memory (default), Redis, or Aerospike | external Redis / Aerospike only |
+| subtx-generator | none | no |
 
 Persist the **kubeconfig** and **operator-supplied** `hosts.env` /
 `*.yaml` outside Git (see [`secrets.md`](secrets.md)).

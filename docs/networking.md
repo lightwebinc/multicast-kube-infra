@@ -66,7 +66,7 @@ net.ipv6.conf.all.force_mld_version = 2
 ### SSM source-filter limits (required when `sourceMode=ssm`)
 
 Source-Specific Multicast (RFC 4607) — used by Posture B/C/D in the
-[SSM Support Plan](https://github.com/lightwebinc/bsv-multicast/blob/main/docs/SourceSpecificMulticast/ssm-support-plan.md) —
+[SSM Support Plan](https://github.com/lightwebinc/bsv-multicast/blob/main/DESIGN.md#source-specific-multicast-ssm) —
 relies on `MCAST_JOIN_SOURCE_GROUP` (RFC 3678). The Linux default cap of
 **64 source filters per socket** is below the production fleet size; with
 hundreds of publishers a fresh join returns `ENOBUFS`. Raise it on every

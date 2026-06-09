@@ -4,7 +4,7 @@
 
 Kubernetes deployment infrastructure for the Bitcoin multicast transaction-distribution stack
 (`shard-proxy`, `shard-listener`, `retry-endpoint`, `subtx-generator`). The
-BRC-137 announcer (`shard-manifest`) ships as its own chart and is deployed
+BRC-139 announcer (`shard-manifest`) ships as its own chart and is deployed
 alongside participants — see [`docs/architecture.md`](docs/architecture.md).
 
 This repo is **distribution-agnostic**: the cluster bring-up lives under
@@ -73,4 +73,4 @@ credentials) are kept out of Git via `*.example` templates and `.gitignore`.
 - [`docs/quickstart-k0s.md`](docs/quickstart-k0s.md) — 10-minute walkthrough
 - [`docs/networking.md`](docs/networking.md) — Multus, CNI choices, BGP-ready notes
 - [`docs/operations.md`](docs/operations.md) — day-2 (upgrade, scale-out, drain)
-- Upstream architecture: [`bsv-multicast/containerization/`](https://github.com/lightwebinc/bsv-multicast/tree/main/containerization)
+- Upstream architecture: [`bsv-multicast/DESIGN.md`](https://github.com/lightwebinc/bsv-multicast/blob/main/DESIGN.md)

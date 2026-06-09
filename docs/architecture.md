@@ -50,7 +50,7 @@ See [`../distributions/common.md`](../distributions/common.md). Summary:
 retry-endpoint releases are generated from the values list, matching
 `composition-spec.md` Option A in the upstream docs.
 
-The `shard-manifest` daemon (BRC-137 announcer) has its own chart at
+The `shard-manifest` daemon (BRC-139 announcer) has its own chart at
 [`shard-manifest-helm`](https://github.com/lightwebinc/shard-manifest-helm)
 and is intentionally **not** wired into the default `apps/helmfile.yaml` —
 it runs alongside each data-plane participant rather than as a shared
@@ -75,6 +75,6 @@ and the listener DaemonSet automatically schedules onto the new nodes.
 
 ## Cross-references
 
-- [`bsv-multicast/containerization/`](https://github.com/lightwebinc/bsv-multicast/tree/main/containerization) — design rationale.
-- [`bsv-multicast/containerization/k0s-deployment.md`](https://github.com/lightwebinc/bsv-multicast/blob/main/containerization/k0s-deployment.md) — the reference architecture this repo implements.
-- [`bsv-multicast/containerization/composition-spec.md`](https://github.com/lightwebinc/bsv-multicast/blob/main/containerization/composition-spec.md) — operator wiring patterns.
+- [`bsv-multicast/DESIGN.md`](https://github.com/lightwebinc/bsv-multicast/blob/main/DESIGN.md) — system design and deployment rationale (the containerization planning docs were folded into the main design doc and this repo).
+- [k0s quickstart](quickstart-k0s.md) — the k0s reference deployment this repo implements.
+- The distribution contract (§ above) and the per-service Helm charts are the operator wiring patterns.

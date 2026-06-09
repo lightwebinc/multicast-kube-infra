@@ -16,5 +16,5 @@ deployment.
 ## Files
 
 - `appset-platform.yaml.example` — placeholder.
-- `appset-apps.yaml.example` — placeholder, modeled after the example in
-  `bsv-multicast/containerization/composition-spec.md` (Option B).
+- `appset-apps.yaml.example` — placeholder, modeled after the ApplicationSet
+  composition pattern described in [`../docs/architecture.md`](../docs/architecture.md).
