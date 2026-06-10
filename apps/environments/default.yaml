@@ -5,13 +5,14 @@ namespace: bsv-mcast
 
 # Pinned chart versions. Bump in lockstep when releasing new chart artefacts.
 chartVersions:
-  proxy: "0.1.0"
-  listener: "0.1.0"
-  retryEndpoint: "0.1.0"
-  subtxGenerator: "0.1.0"
+  proxy: "0.3.2"
+  listener: "0.3.2"
+  retryEndpoint: "0.2.3"
+  subtxGenerator: "0.2.1"
 
-# Wire-protocol shared parameters — must agree across all four components.
-# See bsv-multicast/containerization/composition-spec.md.
+# Wire-protocol shared parameters — must agree across all four components
+# (same shardBits/scope/groupId/ports on every chart, or frames are emitted
+# to groups nobody joins).
 shared:
   shardBits: 2
   mcScope: "site"

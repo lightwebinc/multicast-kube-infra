@@ -45,10 +45,10 @@ See [`../distributions/common.md`](../distributions/common.md). Summary:
 
 ## Application layer
 
-`apps/helmfile.yaml` installs the data-plane bitcoin charts (`shard-proxy`,
+`apps/helmfile.yaml.gotmpl` installs the data-plane bitcoin charts (`shard-proxy`,
 `shard-listener`, `retry-endpoint`, `subtx-generator`) from OCI. Per-node
-retry-endpoint releases are generated from the values list, matching
-`composition-spec.md` Option A in the upstream docs.
+retry-endpoint releases are generated from the values list — one release per
+node, each pinned to that node's fabric address.
 
 The `shard-manifest` daemon (BRC-139 announcer) has its own chart at
 [`shard-manifest-helm`](https://github.com/lightwebinc/shard-manifest-helm)
