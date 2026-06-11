@@ -6,7 +6,7 @@ namespace: bsv-mcast
 # Pinned chart versions. Bump in lockstep when releasing new chart artefacts.
 chartVersions:
   proxy: "0.3.2"
-  listener: "0.3.2"
+  listener: "0.3.3"
   retryEndpoint: "0.2.3"
   subtxGenerator: "0.2.1"
 
