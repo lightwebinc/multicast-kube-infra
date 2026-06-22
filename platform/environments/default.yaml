@@ -17,3 +17,12 @@ fabricSubnet: "fd20::/64"
 bgp:
   enabled: false
   asn: 64512
+
+# Cilium transparent node-to-node encryption (W1 edge-worker join). Off by
+# default. When enabled, pin `devices` to the WAN NIC(s) so the WireGuard
+# underlay endpoint is the WAN address, not the admin-overlay node InternalIP
+# (keeps the pod mesh out of the admin overlay — no double-encapsulation).
+# See 1bsv-ops/docs/production/02-edge-worker-join.md.
+encryption:
+  enabled: false
+  devices: []
