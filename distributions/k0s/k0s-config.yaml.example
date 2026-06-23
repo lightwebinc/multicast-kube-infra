@@ -12,13 +12,21 @@ kind: ClusterConfig
 metadata:
   name: k0s
 spec:
-  # HA control plane (3 dedicated controllers): front the apiserver with a VIP.
-  # Uncomment `api.externalAddress`/`sans` + `controlPlaneLoadBalancing` and set
-  # the VIP. CPLB Keepalived/VRRP uses ARP (flat LAN); switch type to BGP at a
-  # colo and peer the ToR. Single-node labs leave this off.
-  # api:
-  #   externalAddress: 10.0.0.10
-  #   sans: [10.0.0.10]
+  # HA control plane (3 dedicated controllers): float an apiserver VIP with CPLB.
+  # LESSONS FROM THE biz-lax migration (2026-06-23), all the hard way:
+  #  - Put the VIP in `api.sans` ONLY, NOT `api.externalAddress`: an external API
+  #    address is mutually exclusive with nodeLocalLoadBalancing (NLLB), and NLLB is
+  #    required (see below). The cert still covers the VIP via the SAN; CPLB floats it.
+  #  - Do NOT add CPLB `virtualServers`: that IPVS-balances ONLY the apiserver (6443)
+  #    and leaves konnectivity (8132) on the VRRP master alone, so apiservers on the
+  #    other controllers can't reach pods → admission webhooks / metrics / logs fail
+  #    "No agent available". Pure VRRP (active/passive) keeps apiserver+konnectivity
+  #    co-located; konnectivity HA comes from NLLB instead.
+  #  - Each controller's k0sctl host needs `privateAddress: <real IP>`, else k0sctl
+  #    auto-detects the live VIP and writes it as etcd `peerAddress` → etcd crashloops
+  #    "bind: cannot assign requested address" when VRRP moves the VIP.
+  api:
+    sans: [10.0.0.10]            # the CPLB VIP (cert SAN only; NOT externalAddress)
   network:
     provider: custom
     podCIDR: 10.244.0.0/16
@@ -27,17 +35,25 @@ spec:
       enabled: true
       IPv6podCIDR: "fd20:0:0:1::/64"
       IPv6serviceCIDR: "fd30:0:0:1::/108"
+    # Cilium owns eBPF kube-proxy-replacement — disable the bundled kube-proxy.
     kubeProxy:
-      mode: iptables
-    # controlPlaneLoadBalancing:
-    #   enabled: true
-    #   type: Keepalived
-    #   keepalived:
-    #     vrrpInstances:
-    #       - virtualIPs: [10.0.0.10/24]
-    #         authPass: CHANGEME
-    #     virtualServers:
-    #       - ipAddress: 10.0.0.10
+      disabled: true
+    # REQUIRED for konnectivity HA behind dedicated controllers: a per-worker envoy
+    # balances internal node->control-plane traffic (kubelet + konnectivity-agent)
+    # across ALL controllers, so every apiserver has konnectivity agents. The agent
+    # then targets localhost:7132 and the apiserver is served at 127.0.0.1:7443 — the
+    # endpoint Cilium must use as k8sServiceHost (see cni/cilium/values.yaml.gotmpl).
+    nodeLocalLoadBalancing:
+      enabled: true
+      type: EnvoyProxy
+    controlPlaneLoadBalancing:
+      enabled: true
+      type: Keepalived
+      keepalived:
+        vrrpInstances:
+          - virtualIPs: [10.0.0.10/24]
+            authPass: CHANGEME    # VRRP password must be <= 8 chars (keepalived limit)
+        # NO virtualServers — see the lesson above.
   telemetry:
     enabled: false
   # Worker profiles set kubelet config for a class of workers. The `dataplane`
