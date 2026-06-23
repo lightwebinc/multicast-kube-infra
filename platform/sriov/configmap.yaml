@@ -1,0 +1,22 @@
+# SR-IOV device-plugin resource pool for the 1bsv multicast data plane.
+# Advertises VFs as allocatable `1bsv.net/mcast_vf` (resource-prefix set on the
+# DaemonSet). Tune vendor/device/driver/pfNames to the real perf NIC before use;
+# values below are Mellanox mlx5 (ConnectX) examples — see xhost-perf-rig.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sriovdp-config
+  namespace: kube-system
+data:
+  config.json: |
+    {
+        "resourceList": [{
+            "resourceName": "mcast_vf",
+            "selectors": {
+                "vendors": ["15b3"],
+                "drivers": ["mlx5_core"],
+                "pfNames": ["ens4f0np0"],
+                "isRdma": false
+            }
+        }]
+    }

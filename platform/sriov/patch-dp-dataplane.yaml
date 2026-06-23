@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: kube-sriov-device-plugin
+  namespace: kube-system
+spec:
+  template:
+    spec:
+      # Only run where the perf VFs live; tolerate the perf taint (decision 4).
+      nodeSelector:
+        node-role/dataplane: ""
+      tolerations:
+        - key: dataplane
+          operator: Exists
+          effect: NoSchedule
+      containers:
+        - name: kube-sriovdp
+          args:
+            - --log-dir=sriovdp
+            - --log-level=10
+            - --resource-prefix=1bsv.net

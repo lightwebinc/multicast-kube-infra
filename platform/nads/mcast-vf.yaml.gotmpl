@@ -1,0 +1,21 @@
+apiVersion: k8s.cni.cncf.io/v1
+kind: NetworkAttachmentDefinition
+metadata:
+  name: mcast-vf
+  namespace: bsv-mcast
+  annotations:
+    # Binds this NAD to a VF from the SR-IOV device-plugin pool (platform/sriov).
+    # Multus reads the resourceName, allocates a free VF on the SAME NUMA node as
+    # the pod's exclusive cores, and hands it to sriov-cni — the zero-copy AF_XDP
+    # path macvlan cannot give (doc 04 W2).
+    k8s.v1.cni.cncf.io/resourceName: 1bsv.net/mcast_vf
+spec:
+  config: |
+    {
+      "cniVersion": "0.3.1",
+      "type": "sriov",
+      "name": "mcast-vf",
+      "spoofchk": "off",
+      "trust": "on",
+      "ipam": { "type": "static" }
+    }

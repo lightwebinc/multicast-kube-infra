@@ -1,0 +1,17 @@
+# SR-IOV stack for the tainted data-plane pool (doc 02 W2 / doc 04).
+#   kubectl apply -k platform/sriov
+# Pristine upstream DaemonSets live in vendor/ (images pinned to release tags);
+# overlays add dataplane-pool scheduling + the 1bsv.net resource prefix.
+# HARDWARE-GATED: advertises 0 VFs until run on a node with real SR-IOV PFs
+# matching configmap.yaml — it cannot be validated on virtio/LXD lab NICs.
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - vendor/sriovdp-daemonset.yaml
+  - vendor/sriov-cni-daemonset.yaml
+  - configmap.yaml
+patches:
+  - path: patch-dp-dataplane.yaml
+    target: {kind: DaemonSet, name: kube-sriov-device-plugin}
+  - path: patch-cni-dataplane.yaml
+    target: {kind: DaemonSet, name: kube-sriov-cni-ds}
