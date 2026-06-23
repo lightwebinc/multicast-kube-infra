@@ -4,7 +4,11 @@
 #   envsubst < k0sctl.yaml.example > k0sctl.yaml
 # (bootstrap.sh does this automatically.)
 #
-# Scale-out: add additional `- role: worker` hosts under spec.hosts.
+# Single-node lab default below (one controller+worker). Two scale-out shapes:
+#   * add `- role: worker` hosts for more capacity (keep the single controller);
+#   * HA: replace the single node with 3 `- role: controller` (etcd quorum, no
+#     kubelet) + N `- role: worker`, and enable CPLB in k0s-config (the apiserver
+#     VIP). The production go-live target is the HA shape — docs/production/03.
 
 apiVersion: k0sctl.k0sproject.io/v1beta1
 kind: Cluster
@@ -22,17 +26,22 @@ spec:
         - --enable-worker
         - --no-taints
 
+    # HA control plane (3 dedicated controllers, etcd quorum, no kubelet):
+    # - role: controller
+    #   ssh: {address: ${CP1_ADDR}, user: ${SSH_USER}, keyPath: ${SSH_KEY}}
+    # - role: controller
+    #   ssh: {address: ${CP2_ADDR}, user: ${SSH_USER}, keyPath: ${SSH_KEY}}
+    # - role: controller
+    #   ssh: {address: ${CP3_ADDR}, user: ${SSH_USER}, keyPath: ${SSH_KEY}}
+
+    # Worker pool. A data-plane/perf worker opts into the kubelet `dataplane`
+    # profile (CPU/Topology/Memory managers — see k0s-config.yaml.example):
     # - role: worker
-    #   ssh:
-    #     address: ${NODE1_ADDR}
-    #     user: ${SSH_USER}
-    #     keyPath: ${SSH_KEY}
+    #   ssh: {address: ${NODE1_ADDR}, user: ${SSH_USER}, keyPath: ${SSH_KEY}}
+    #   installFlags: ["--profile=dataplane"]
     #
     # - role: worker
-    #   ssh:
-    #     address: ${NODE2_ADDR}
-    #     user: ${SSH_USER}
-    #     keyPath: ${SSH_KEY}
+    #   ssh: {address: ${NODE2_ADDR}, user: ${SSH_USER}, keyPath: ${SSH_KEY}}
 
   k0s:
     version: "1.31.2+k0s.0"

@@ -12,6 +12,13 @@ kind: ClusterConfig
 metadata:
   name: k0s
 spec:
+  # HA control plane (3 dedicated controllers): front the apiserver with a VIP.
+  # Uncomment `api.externalAddress`/`sans` + `controlPlaneLoadBalancing` and set
+  # the VIP. CPLB Keepalived/VRRP uses ARP (flat LAN); switch type to BGP at a
+  # colo and peer the ToR. Single-node labs leave this off.
+  # api:
+  #   externalAddress: 10.0.0.10
+  #   sans: [10.0.0.10]
   network:
     provider: custom
     podCIDR: 10.244.0.0/16
@@ -22,8 +29,37 @@ spec:
       IPv6serviceCIDR: "fd30:0:0:1::/108"
     kubeProxy:
       mode: iptables
+    # controlPlaneLoadBalancing:
+    #   enabled: true
+    #   type: Keepalived
+    #   keepalived:
+    #     vrrpInstances:
+    #       - virtualIPs: [10.0.0.10/24]
+    #         authPass: CHANGEME_VRRP
+    #     virtualServers:
+    #       - ipAddress: 10.0.0.10
   telemetry:
     enabled: false
+  # Worker profiles set kubelet config for a class of workers. The `dataplane`
+  # profile is the W2 substrate (docs/production/02): exclusive NUMA-local cores
+  # for Guaranteed-QoS AF_XDP/SR-IOV pods. A node opts in with
+  # `--profile dataplane` (k0sctl host installFlags). Harmless until referenced.
+  workerProfiles:
+    - name: dataplane
+      values:
+        cpuManagerPolicy: static
+        topologyManagerPolicy: single-numa-node
+        memoryManager:
+          policy: Static
+        # Reserve cores/memory off the allocatable pool so the hot path stays
+        # exclusive. Align reservedSystemCPUs with the host isolcpus / the W1
+        # k8s_reserved_cpus. Tune per node-profile (program 17).
+        kubeReserved:
+          cpu: "1"
+          memory: "1Gi"
+        systemReserved:
+          cpu: "1"
+          memory: "1Gi"
   extensions:
     helm:
       # We drive Helm releases from the workstation (Helmfile) to keep the
