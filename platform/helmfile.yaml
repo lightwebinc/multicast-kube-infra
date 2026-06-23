@@ -68,7 +68,9 @@ releases:
   - name: external-secrets
     namespace: external-secrets
     chart: external-secrets/external-secrets
-    version: 0.10.5
+    # 2.x serves the stable external-secrets.io/v1 API the committed
+    # ExternalSecrets/ClusterSecretStores target (0.10.x only served v1beta1).
+    version: 2.6.0
     createNamespace: true
     labels:
       layer: secrets

@@ -5,13 +5,31 @@
 
 kubeProxyReplacement: true
 
+# REQUIRED with kubeProxyReplacement on dedicated controllers: Cilium must reach
+# the apiserver WITHOUT going through the kubernetes ClusterIP (10.96.0.1) — that
+# ClusterIP only works once Cilium itself has programmed it, a chicken-and-egg that
+# makes every cilium-agent crashloop ("dial 10.96.0.1:443: operation not permitted")
+# whenever the agents and apiserver restart together. Point Cilium at a kube-proxy-
+# independent endpoint. On k0s with node-local load balancing the per-node envoy
+# serves the apiserver at 127.0.0.1:7443 (HA across controllers, host-reachable since
+# the agent is hostNetwork). Override per environment.
+{{- if .Values.k8sServiceHost }}
+k8sServiceHost: {{ .Values.k8sServiceHost | quote }}
+k8sServicePort: {{ .Values.k8sServicePort | quote }}
+{{- end }}
+
 ipam:
   mode: cluster-pool
   operator:
     clusterPoolIPv4PodCIDRList:
       - {{ .Values.clusterCIDR }}
+    clusterPoolIPv4MaskSize: 24
     clusterPoolIPv6PodCIDRList:
       - {{ .Values.clusterCIDRv6 }}
+    # Cilium's cluster-pool IPv6 allocator requires (nodeMask - poolPrefix) <= 16
+    # or it fatals "node CIDR size is too big". The pool is a /64, so the per-node
+    # mask must be <= /80 (default /112 = 48 bits, too big).
+    clusterPoolIPv6MaskSize: 80
 
 ipv4:
   enabled: true

@@ -11,4 +11,13 @@ namespace: kube-system
 image:
   pullPolicy: IfNotPresent
 
+# Point Multus at the active CNI's conflist as the default ("cluster") network.
+# The chart default is "k8s-pod-network" (Calico's conflist name); under Cilium
+# the conflist is named "cilium", under kube-router "kuberouter". A mismatch
+# makes Multus fail every sandbox with "failed to get clusterNetwork ... not
+# found". Keyed off the CNI env so it tracks the selected CNI.
+config:
+  cni_conf:
+    clusterNetwork: {{ if eq (env "CNI" | default "calico") "cilium" }}cilium{{ else if eq (env "CNI") "kube-router" }}kuberouter{{ else }}k8s-pod-network{{ end }}
+
 # Leave defaults for socket dirs — the chart auto-detects.
