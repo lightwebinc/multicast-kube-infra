@@ -29,10 +29,16 @@ bgpControlPlane:
 # the pod mesh OUT of the admin overlay (no double-encapsulation): kubelet<->
 # apiserver rides the overlay, pods ride Cilium WG on the WAN — two parallel
 # encrypted planes. See 1bsv-ops/docs/production/02-edge-worker-join.md.
+#
+# nodeEncryption (HOST traffic) is a SEPARATE toggle, default OFF: in this design
+# host/kubelet traffic rides the admin overlay, so Cilium encrypts PODS only —
+# encrypting host traffic too would double-encrypt the overlay path. Lab-proven
+# (2026-06-23): cross-node pod ping = WireGuard UDP/51871 on the WAN, zero
+# cleartext; kube-proxy-replacement on the WAN device.
 encryption:
   enabled: {{ .Values.encryption.enabled }}
   type: wireguard
-  nodeEncryption: {{ .Values.encryption.enabled }}
+  nodeEncryption: {{ .Values.encryption.nodeEncryption | default false }}
 {{- if .Values.encryption.devices }}
 devices: {{ .Values.encryption.devices | toJson }}
 {{- end }}

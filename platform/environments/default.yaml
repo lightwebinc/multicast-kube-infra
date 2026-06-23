@@ -25,4 +25,7 @@ bgp:
 # See 1bsv-ops/docs/production/02-edge-worker-join.md.
 encryption:
   enabled: false
+  # nodeEncryption (host/kubelet traffic) stays off: that path rides the admin
+  # overlay, not Cilium. Cilium encrypts pods only. See 02-edge-worker-join.md.
+  nodeEncryption: false
   devices: []
