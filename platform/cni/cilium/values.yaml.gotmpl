@@ -9,13 +9,23 @@ kubeProxyReplacement: true
 # an overlay tunnel adds per-packet encap we don't want, and stacking WireGuard ON TOP
 # of VXLAN double-encapsulates and blackholes large packets (biz-lax 2026-06-23: tunnel
 # mode + WG => cross-node pods unreachable for >MTU-overhead packets). With native
-# routing + WireGuard, WG's allowed-ips carries pod traffic between nodes over the
-# routable node IPs (no L2 adjacency, no autoDirectNodeRoutes, no tunnel needed) — the
-# correct model for dispersed nodes.
+# routing + WireGuard, WG's allowed-ips carries POD-origin traffic between nodes.
+#
+# autoDirectNodeRoutes: WG allowed-ips only covers POD-origin traffic (eBPF redirects it
+# to cilium_wg0). HOST-origin traffic to a remote pod — e.g. the hostNetwork
+# konnectivity-agent dialing a ClusterIP/pod, which the apiserver admission webhooks ride
+# — uses the kernel routing table, which has NO route for remote pod CIDRs, so it falls
+# to the default gateway and is dropped. Fix depends on topology:
+#   - L2-adjacent nodes (one subnet, e.g. the biz-lax lab): set true → Cilium installs
+#     `<remote podCIDR> via <nodeIP>` so host->remote-pod works (WG still encrypts).
+#   - Dispersed/routed-fabric nodes (not one L2): keep false and let the fabric route pod
+#     CIDRs; direct routes can't be installed across L3.
+# biz-lax 2026-06-23: host->remote-pod (admission webhooks) was broken until this was
+# enabled — pod-to-pod looked fine, masking it.
 routingMode: native
 ipv4NativeRoutingCIDR: {{ .Values.clusterCIDR }}
 ipv6NativeRoutingCIDR: {{ .Values.clusterCIDRv6 }}
-autoDirectNodeRoutes: false
+autoDirectNodeRoutes: {{ .Values.autoDirectNodeRoutes | default false }}
 
 # Pod MTU. Cilium does NOT auto-reduce the pod MTU for the WireGuard overhead here, so
 # set it explicitly: 1380 pod + ~60 WG = ~1440 on-wire, fits a 1500 underlay with margin

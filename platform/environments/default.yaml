@@ -20,6 +20,14 @@ k8sServicePort: "7443"
 # convention used elsewhere in the bsv-multicast docs).
 fabricSubnet: "fd20::/64"
 
+# Cilium autoDirectNodeRoutes — install direct routes for remote pod CIDRs via node IPs.
+# REQUIRED on L2-adjacent clusters (all nodes on one subnet, e.g. the biz-lax lab on
+# 10.10.10.0/24) so HOST-origin traffic reaches remote pods — the konnectivity-agent
+# (hostNetwork) dials ClusterIPs/pods for admission webhooks via the kernel routing table,
+# which otherwise has no remote-pod route. Set false on dispersed/routed-fabric clusters
+# (nodes not on one L2) and let the fabric route pod CIDRs. See cni/cilium/values.yaml.gotmpl.
+autoDirectNodeRoutes: true
+
 # BGP-related toggles (Calico/Cilium); off by default.
 bgp:
   enabled: false
