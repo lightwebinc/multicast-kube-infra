@@ -30,18 +30,19 @@ bgp:
 # underlay endpoint is the WAN address, not the admin-overlay node InternalIP
 # (keeps the pod mesh out of the admin overlay — no double-encapsulation).
 # See 1bsv-ops/docs/production/02-edge-worker-join.md.
+# Pod MTU for the native-routing + WireGuard datapath (see cni/cilium/values.yaml.gotmpl).
+# 1380 + ~60 WG = ~1440 on-wire. Lower it per-fabric for lower-MTU WAN paths.
+podMTU: 1380
+
 encryption:
-  # OFF pending an MTU fix. On the 3-node biz-lax migration (2026-06-23) enabling
-  # WireGuard blackholed cross-node pod traffic for large packets (small ICMP/DNS
-  # OK, TLS/HTTP/large DNS responses timed out) — cilium-health 0/3 reachable,
-  # CoreDNS flaky, broker/portal OIDC discovery "context deadline exceeded". Classic
-  # WG-overhead MTU mismatch: the pod/tunnel MTU was not reduced for the WG path.
-  # cwglab (2 nodes) didn't surface it. Re-enable only with the tunnel/route MTU
-  # set correctly (cilium `MTU`/`--mtu`, ~1380 over a 1500 underlay) and re-verified.
-  enabled: false
+  # ON: WireGuard with NATIVE routing (no VXLAN). Proven on biz-lax 2026-06-23 once
+  # routingMode=native + MTU=1380 were set — cross-node pods, DNS, OIDC all healthy.
+  # The earlier blackhole was VXLAN+WG double-encap with an unreduced pod MTU, NOT WG
+  # itself. Keep routingMode native (default.yaml/gotmpl) whenever this is enabled.
+  enabled: true
   # nodeEncryption (host/kubelet traffic) stays off: that path rides the admin
   # overlay, not Cilium. Cilium encrypts pods only. See 02-edge-worker-join.md.
   nodeEncryption: false
-  # Pin the WireGuard underlay endpoint to the WAN/LAN NIC (biz-lax nodes use
-  # enp5s0) so the encryption endpoint is the node address, not the admin overlay.
+  # Pin the WireGuard underlay endpoint to the WAN NIC (biz-lax nodes use enp5s0) so
+  # the encryption endpoint is the node address, not the admin overlay.
   devices: ["enp5s0"]

@@ -5,6 +5,23 @@
 
 kubeProxyReplacement: true
 
+# Routing mode: NATIVE, never VXLAN/Geneve. The fleet is a DISPERSED (geo) topology —
+# an overlay tunnel adds per-packet encap we don't want, and stacking WireGuard ON TOP
+# of VXLAN double-encapsulates and blackholes large packets (biz-lax 2026-06-23: tunnel
+# mode + WG => cross-node pods unreachable for >MTU-overhead packets). With native
+# routing + WireGuard, WG's allowed-ips carries pod traffic between nodes over the
+# routable node IPs (no L2 adjacency, no autoDirectNodeRoutes, no tunnel needed) — the
+# correct model for dispersed nodes.
+routingMode: native
+ipv4NativeRoutingCIDR: {{ .Values.clusterCIDR }}
+ipv6NativeRoutingCIDR: {{ .Values.clusterCIDRv6 }}
+autoDirectNodeRoutes: false
+
+# Pod MTU. Cilium does NOT auto-reduce the pod MTU for the WireGuard overhead here, so
+# set it explicitly: 1380 pod + ~60 WG = ~1440 on-wire, fits a 1500 underlay with margin
+# for WAN links (PPPoE 1492, provider tunnels). Tune down per-fabric for lower-MTU paths.
+MTU: {{ .Values.podMTU | default 1380 }}
+
 # REQUIRED with kubeProxyReplacement on dedicated controllers: Cilium must reach
 # the apiserver WITHOUT going through the kubernetes ClusterIP (10.96.0.1) — that
 # ClusterIP only works once Cilium itself has programmed it, a chicken-and-egg that
