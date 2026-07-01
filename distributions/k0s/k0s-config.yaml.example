@@ -13,7 +13,7 @@ metadata:
   name: k0s
 spec:
   # HA control plane (3 dedicated controllers): float an apiserver VIP with CPLB.
-  # LESSONS FROM THE biz-lax migration (2026-06-23), all the hard way:
+  # LESSONS FROM THE L2-adjacent reference cluster migration, all the hard way:
   #  - Put the VIP in `api.sans` ONLY, NOT `api.externalAddress`: an external API
   #    address is mutually exclusive with nodeLocalLoadBalancing (NLLB), and NLLB is
   #    required (see below). The cert still covers the VIP via the SAN; CPLB floats it.

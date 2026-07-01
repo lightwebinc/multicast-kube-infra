@@ -21,8 +21,8 @@ k8sServicePort: "7443"
 fabricSubnet: "fd20::/64"
 
 # Cilium autoDirectNodeRoutes — install direct routes for remote pod CIDRs via node IPs.
-# REQUIRED on L2-adjacent clusters (all nodes on one subnet, e.g. the biz-lax lab on
-# 10.10.10.0/24) so HOST-origin traffic reaches remote pods — the konnectivity-agent
+# REQUIRED on L2-adjacent clusters (all nodes on one subnet, e.g. the L2-adjacent
+# reference cluster on 10.10.10.0/24) so HOST-origin traffic reaches remote pods — the konnectivity-agent
 # (hostNetwork) dials ClusterIPs/pods for admission webhooks via the kernel routing table,
 # which otherwise has no remote-pod route. Set false on dispersed/routed-fabric clusters
 # (nodes not on one L2) and let the fabric route pod CIDRs. See cni/cilium/values.yaml.gotmpl.
@@ -37,20 +37,20 @@ bgp:
 # default. When enabled, pin `devices` to the WAN NIC(s) so the WireGuard
 # underlay endpoint is the WAN address, not the admin-overlay node InternalIP
 # (keeps the pod mesh out of the admin overlay — no double-encapsulation).
-# See 1bsv-ops/docs/production/02-edge-worker-join.md.
+# See the edge-worker join profile (W1).
 # Pod MTU for the native-routing + WireGuard datapath (see cni/cilium/values.yaml.gotmpl).
 # 1380 + ~60 WG = ~1440 on-wire. Lower it per-fabric for lower-MTU WAN paths.
 podMTU: 1380
 
 encryption:
-  # ON: WireGuard with NATIVE routing (no VXLAN). Proven on biz-lax 2026-06-23 once
-  # routingMode=native + MTU=1380 were set — cross-node pods, DNS, OIDC all healthy.
+  # ON: WireGuard with NATIVE routing (no VXLAN). Proven on the L2-adjacent reference
+  # cluster once routingMode=native + MTU=1380 were set — cross-node pods, DNS, OIDC all healthy.
   # The earlier blackhole was VXLAN+WG double-encap with an unreduced pod MTU, NOT WG
   # itself. Keep routingMode native (default.yaml/gotmpl) whenever this is enabled.
   enabled: true
   # nodeEncryption (host/kubelet traffic) stays off: that path rides the admin
-  # overlay, not Cilium. Cilium encrypts pods only. See 02-edge-worker-join.md.
+  # overlay, not Cilium. Cilium encrypts pods only (edge-worker join, W1).
   nodeEncryption: false
-  # Pin the WireGuard underlay endpoint to the WAN NIC (biz-lax nodes use enp5s0) so
+  # Pin the WireGuard underlay endpoint to the WAN NIC (reference nodes use enp5s0) so
   # the encryption endpoint is the node address, not the admin overlay.
   devices: ["enp5s0"]

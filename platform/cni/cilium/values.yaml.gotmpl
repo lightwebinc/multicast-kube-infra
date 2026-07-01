@@ -7,8 +7,9 @@ kubeProxyReplacement: true
 
 # Routing mode: NATIVE, never VXLAN/Geneve. The fleet is a DISPERSED (geo) topology —
 # an overlay tunnel adds per-packet encap we don't want, and stacking WireGuard ON TOP
-# of VXLAN double-encapsulates and blackholes large packets (biz-lax 2026-06-23: tunnel
-# mode + WG => cross-node pods unreachable for >MTU-overhead packets). With native
+# of VXLAN double-encapsulates and blackholes large packets (observed on the L2-adjacent
+# reference cluster: tunnel mode + WG => cross-node pods unreachable for >MTU-overhead
+# packets). With native
 # routing + WireGuard, WG's allowed-ips carries POD-origin traffic between nodes.
 #
 # autoDirectNodeRoutes: WG allowed-ips only covers POD-origin traffic (eBPF redirects it
@@ -16,12 +17,12 @@ kubeProxyReplacement: true
 # konnectivity-agent dialing a ClusterIP/pod, which the apiserver admission webhooks ride
 # — uses the kernel routing table, which has NO route for remote pod CIDRs, so it falls
 # to the default gateway and is dropped. Fix depends on topology:
-#   - L2-adjacent nodes (one subnet, e.g. the biz-lax lab): set true → Cilium installs
+#   - L2-adjacent nodes (one subnet, e.g. the L2-adjacent reference cluster): set true → Cilium installs
 #     `<remote podCIDR> via <nodeIP>` so host->remote-pod works (WG still encrypts).
 #   - Dispersed/routed-fabric nodes (not one L2): keep false and let the fabric route pod
 #     CIDRs; direct routes can't be installed across L3.
-# biz-lax 2026-06-23: host->remote-pod (admission webhooks) was broken until this was
-# enabled — pod-to-pod looked fine, masking it.
+# On the L2-adjacent reference cluster: host->remote-pod (admission webhooks) was broken
+# until this was enabled — pod-to-pod looked fine, masking it.
 routingMode: native
 ipv4NativeRoutingCIDR: {{ .Values.clusterCIDR }}
 ipv6NativeRoutingCIDR: {{ .Values.clusterCIDRv6 }}
@@ -73,7 +74,7 @@ bgpControlPlane:
 # edge worker is the admin-overlay address used as kubelet --node-ip. This keeps
 # the pod mesh OUT of the admin overlay (no double-encapsulation): kubelet<->
 # apiserver rides the overlay, pods ride Cilium WG on the WAN — two parallel
-# encrypted planes. See 1bsv-ops/docs/production/02-edge-worker-join.md.
+# encrypted planes (edge-worker join, W1).
 #
 # nodeEncryption (HOST traffic) is a SEPARATE toggle, default OFF: in this design
 # host/kubelet traffic rides the admin overlay, so Cilium encrypts PODS only —

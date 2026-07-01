@@ -2,8 +2,8 @@
 
 Exposes NIC **Virtual Functions** as allocatable, NUMA-topology-hinted Kubernetes
 resources so an AF_XDP `shard-proxy`/`shard-listener` pod gets **zero-copy** ingress —
-which the macvlan secondary (`mcast-fabric`) cannot give. Part of
-[1bsv-ops production doc 04 (W2)](https://github.com/lightwebinc/1bsv-ops/blob/main/docs/production/04-edge-ingress-orchestration.md).
+which the macvlan secondary (`mcast-fabric`) cannot give. Part of the
+orchestrated data-plane worker profile (W2).
 
 ## Components
 

@@ -78,7 +78,7 @@ EOF
 }
 
 # Apply perf-tuning sysctls (UDP buffers, busy-poll, backlog) on every host.
-# Measured to gain +7.3% on the 256 B Bitcoin P2PKH hot path. Reboot is
+# Measured to give a measurable improvement on the small-packet hot path. Reboot is
 # required separately for intel_idle.max_cstate=1; we set sysfs C-states
 # at apply time so the running kernel uses shallow idle until next boot.
 apply_perf_tuning() {
