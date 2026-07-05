@@ -41,7 +41,10 @@ See [`../distributions/common.md`](../distributions/common.md). Summary:
   `ClusterSecretStore` stub is shipped without a provider; operators choose
   Vault, AWS Secrets Manager, etc.
 - **NADs** — `mcast-fabric` is applied by default. `bgp-transit` and
-  `bgp-ibgp` are available for BGP scenarios but not applied by default.
+  `bgp-ibgp` are available for BGP scenarios, and `mcast-vf` binds an SR-IOV
+  VF; none of these are applied by default.
+- **SR-IOV** (`platform/sriov/`) — device plugin + sriov-cni for the
+  data-plane perf pool. Opt-in via `ENABLE_SRIOV=true`; hardware-gated.
 
 ## Application layer
 
@@ -52,7 +55,7 @@ node, each pinned to that node's fabric address.
 
 The `shard-manifest` daemon (BRC-139 announcer) has its own chart at
 [`shard-manifest-helm`](https://github.com/lightwebinc/shard-manifest-helm)
-and is intentionally **not** wired into the default `apps/helmfile.yaml` —
+and is intentionally **not** wired into the default `apps/helmfile.yaml.gotmpl` —
 it runs alongside each data-plane participant rather than as a shared
 service. Operators wire it in per their topology, or deploy it to VMs via
 [`manifest-infra`](https://github.com/lightwebinc/manifest-infra).

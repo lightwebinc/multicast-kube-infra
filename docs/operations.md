@@ -17,8 +17,10 @@ make verify
 make apps
 ```
 
-Listener pods drain in `DRAIN_TIMEOUT` (chart value, default 5 s) so in-flight
-NACK cycles complete before the socket closes.
+Listener drain-on-shutdown is controlled by the chart's `config.drainTimeout`
+(default `0s` — disabled). Set it, plus a `terminationGracePeriodSeconds` at
+least as large, if in-flight NACK cycles should complete before the socket
+closes.
 
 ### Drain a node
 
@@ -72,7 +74,7 @@ The simpler `static_configs` route via Service ClusterIPs also works:
       - targets: ['proxy.bsv-mcast.svc.cluster.local:9100']
   - job_name: bsv-mcast-listener
     static_configs:
-      - targets: ['listener.bsv-mcast.svc.cluster.local:9100']
+      - targets: ['listener.bsv-mcast.svc.cluster.local:9200']
 ```
 
 The charts ship `ServiceMonitor` templates (gated by

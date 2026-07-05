@@ -8,7 +8,7 @@
 #   * add `- role: worker` hosts for more capacity (keep the single controller);
 #   * HA: replace the single node with 3 `- role: controller` (etcd quorum, no
 #     kubelet) + N `- role: worker`, and enable CPLB in k0s-config (the apiserver
-#     VIP). The production go-live target is the HA shape — docs/production/03.
+#     VIP). Production deployments should target the HA shape.
 
 apiVersion: k0sctl.k0sproject.io/v1beta1
 kind: Cluster

@@ -53,7 +53,7 @@ for nad in ${NADS//,/ }; do
   envsubst < "${src}" | kubectl apply -f -
 done
 
-# SR-IOV stack for the data-plane perf pool (doc 04 W2). Opt-in and HARDWARE-GATED:
+# SR-IOV stack for the data-plane perf pool. Opt-in and HARDWARE-GATED:
 # it advertises 0 VFs until run on nodes with real SR-IOV PFs matching
 # platform/sriov/configmap.yaml — it cannot be validated on virtio/LXD lab NICs.
 if [[ "${ENABLE_SRIOV:-false}" == "true" ]]; then

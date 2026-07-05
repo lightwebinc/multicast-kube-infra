@@ -33,7 +33,7 @@ When a chart needs a secret (e.g. retry-endpoint Redis password), the
 preferred pattern is:
 
 ```yaml
-apiVersion: external-secrets.io/v1beta1
+apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
   name: retry-redis

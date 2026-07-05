@@ -6,10 +6,10 @@ namespace: bsv-mcast
 # Pinned chart versions. Bump in lockstep when releasing new chart artefacts.
 chartVersions:
   proxy: "0.4.0"
-  listener: "0.4.0"
+  listener: "0.4.2"
   retryEndpoint: "0.3.0"
   subtxGenerator: "0.2.3"
-  # shard-manifest is intentionally NOT wired into apps/helmfile.yaml (see
+  # shard-manifest is intentionally NOT wired into apps/helmfile.yaml.gotmpl (see
   # docs/architecture.md); it runs alongside each participant per-topology.
   # Current released chart version: 0.2.3 (shard-manifest-helm).
   # shardManifest: "0.2.3"

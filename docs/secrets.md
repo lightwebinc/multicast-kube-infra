@@ -34,7 +34,7 @@ matches the chart's `existingSecret` value. Example for the retry endpoint
 Redis password:
 
 ```yaml
-apiVersion: external-secrets.io/v1beta1
+apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
   name: retry-redis
@@ -68,6 +68,6 @@ directory (gitignored) and source from the Makefile.
 2. Use Vault or a managed secret store from day one — even if you start with a
    single static secret.
 3. Add audit logging to the secret backend before going to production.
-4. Once Phase 6 image publishing is gated behind environment approvals
+4. Once image publishing is gated behind environment approvals
    (already true for the chart repos), require ESO-sourced pull secrets here
    too. The same `ExternalSecret` pattern works.

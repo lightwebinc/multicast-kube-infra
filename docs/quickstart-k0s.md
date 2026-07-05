@@ -52,7 +52,7 @@ export KUBECONFIG="$(pwd)/.kube/k0s.config"
 kubectl -n bsv-mcast get pods
 ```
 
-Metrics endpoints are reachable on the primary CNI port (default `9100` on
+Metrics endpoints are reachable on the primary CNI port (default `9200` on
 listeners, `9100` on proxy). External Prometheus scrape examples live in
 [`operations.md`](operations.md).
 

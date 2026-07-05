@@ -1,7 +1,7 @@
 # SR-IOV device-plugin resource pool for the 1bsv multicast data plane.
 # Advertises VFs as allocatable `1bsv.net/mcast_vf` (resource-prefix set on the
 # DaemonSet). Tune vendor/device/driver/pfNames to the real perf NIC before use;
-# values below are Mellanox mlx5 (ConnectX) examples — see xhost-perf-rig.
+# values below are Mellanox mlx5 (ConnectX) examples.
 apiVersion: v1
 kind: ConfigMap
 metadata:

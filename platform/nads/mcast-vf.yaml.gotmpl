@@ -7,7 +7,7 @@ metadata:
     # Binds this NAD to a VF from the SR-IOV device-plugin pool (platform/sriov).
     # Multus reads the resourceName, allocates a free VF on the SAME NUMA node as
     # the pod's exclusive cores, and hands it to sriov-cni — the zero-copy AF_XDP
-    # path macvlan cannot give (doc 04 W2).
+    # path macvlan cannot give.
     k8s.v1.cni.cncf.io/resourceName: 1bsv.net/mcast_vf
 spec:
   config: |

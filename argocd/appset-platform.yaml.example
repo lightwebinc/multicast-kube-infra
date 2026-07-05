@@ -14,6 +14,9 @@ spec:
             repoURL: https://docs.tigera.io/calico/charts
             targetRevision: v3.28.2
             namespace: kube-system
+          # NOTE: k8snetworkplumbingwg publishes no Helm repo index — the
+          # maintained path pulls the chart via helm-git (see
+          # platform/helmfile.yaml); adapt this source before use.
           - name: multus
             chart: multus
             repoURL: https://k8snetworkplumbingwg.github.io/helm-charts
@@ -22,7 +25,7 @@ spec:
           - name: external-secrets
             chart: external-secrets
             repoURL: https://charts.external-secrets.io
-            targetRevision: 0.10.5
+            targetRevision: 2.6.0
             namespace: external-secrets
   template:
     metadata:

@@ -3,7 +3,7 @@ mode: {{ .Values.subtxGenerator.mode | quote }}
 workloadType: {{ .Values.subtxGenerator.workloadType | quote }}
 
 args:
-  addr: "[fd20::20]:9000"      # proxy ingress; matches fabricAddrs.proxy
+  addr: "[fd20::20]:8725"      # proxy tx ingress; matches fabricAddrs.proxy
 
 subtxGen:
   shardBits: {{ .Values.shared.shardBits }}

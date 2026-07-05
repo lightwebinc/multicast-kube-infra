@@ -57,7 +57,7 @@ spec:
   telemetry:
     enabled: false
   # Worker profiles set kubelet config for a class of workers. The `dataplane`
-  # profile is the W2 substrate (docs/production/02): exclusive NUMA-local cores
+  # profile targets data-plane/perf workers: exclusive NUMA-local cores
   # for Guaranteed-QoS AF_XDP/SR-IOV pods. A node opts in with
   # `--profile dataplane` (k0sctl host installFlags). Harmless until referenced.
   workerProfiles:
@@ -68,8 +68,8 @@ spec:
         memoryManager:
           policy: Static
         # Reserve cores/memory off the allocatable pool so the hot path stays
-        # exclusive. Align reservedSystemCPUs with the host isolcpus / the W1
-        # k8s_reserved_cpus. Tune per node-profile (program 17).
+        # exclusive. Align reservedSystemCPUs with the host isolcpus
+        # reservation. Tune per node profile.
         kubeReserved:
           cpu: "1"
           memory: "1Gi"

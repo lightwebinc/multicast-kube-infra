@@ -39,7 +39,8 @@ idempotent — re-running converges to desired state.
 | `distributions/eks/`     | Stub for AWS EKS. |
 | `platform/cni/`          | Calico (default), Cilium, kube-router options. |
 | `platform/multus/`       | Multus CNI install. |
-| `platform/nads/`          | `NetworkAttachmentDefinition` templates (`mcast-fabric`, `bgp-transit`, `bgp-ibgp`). |
+| `platform/nads/`          | `NetworkAttachmentDefinition` templates (`mcast-fabric`, `bgp-transit`, `bgp-ibgp`, `mcast-vf`). |
+| `platform/sriov/`        | SR-IOV device plugin + CNI for the data-plane perf pool (opt-in via `ENABLE_SRIOV=true`). |
 | `platform/secrets/`      | External Secrets Operator + `ClusterSecretStore` stub. |
 | `apps/`                   | Helmfile composing the data-plane bitcoin charts (proxy/listener/retry/subtx-gen). |
 | `argocd/`                 | Stub for future ApplicationSet adoption. |

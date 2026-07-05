@@ -101,17 +101,18 @@ names or IPv6 literals — typically headless-Service names fronting the
 relevant control-plane pods). See the SSM Support Plan for the per-list
 sizing and DNS-resolution semantics.
 
-### Deterministic per-pod IPv6 (Multus + Whereabouts)
+### Deterministic per-pod IPv6 (Multus static IPAM)
 
 Posture B/C/D require each shard-proxy / shard-manifest / retry-endpoint
 replica to bind a **distinct, stable IPv6** (anycast across replicas
-breaks PIM-SSM RPF). Pod IPs from default CNI are ephemeral; the
-StatefulSet + Multus + Whereabouts pattern in `platform/nads/` already
-gives stable per-pod IPs on the macvlan fabric interface. The Helm
-charts surface `bindSource` (proxy / manifest / retry-endpoint) and
-`ssmBootstrap.*` lists (listener / retry-endpoint) — set
-`bindSource` to the per-pod IP that Whereabouts assigns from the
-configured IPAM range.
+breaks PIM-SSM RPF). Pod IPs from the default CNI are ephemeral; the
+NADs in `platform/nads/` use static IPAM (`"ipam": { "type": "static" }`),
+and each release supplies its fabric address via the chart's
+`networking.multus.fabricIPv6` value, rendered into the pod's
+`k8s.v1.cni.cncf.io/networks` annotation (see `apps/values/*.yaml.gotmpl`).
+The Helm charts surface `bindSource` (proxy / manifest / retry-endpoint)
+and `ssmBootstrap.*` lists (listener / retry-endpoint) — set
+`bindSource` to the same per-release fabric IPv6.
 
 `hostNetwork: true` is the fallback when Multus is unavailable but
 couples component identity to node identity. A normal Kubernetes
@@ -124,15 +125,20 @@ The retry endpoint must bind its NACK socket to the **same** IPv6 the listener
 addresses it by, otherwise SLAAC source-address selection causes ACKs to be
 silently dropped (see the upstream
 [`retry-endpoint` README](https://github.com/lightwebinc/retry-endpoint)).
-The chart pattern enforced by `apps/helmfile.yaml` sets `config.nackAddr`
+The chart pattern enforced by `apps/helmfile.yaml.gotmpl` sets `config.nackAddr`
 explicitly per release — do not leave it empty.
 
-## Cloud-friendly fallback (Phase 7)
+## Cloud-friendly fallback (no multicast)
 
-When `EGRESS_MODE=unicast-list` lands in the proxy, the entire stack can run
-on a standard CNI (no Multus, no `hostNetwork`). The `apps/helmfile.yaml`
-setting `networkingMode: unicast` will switch the rendered chart values; the
-platform layer can then skip the Multus and NADs releases on EKS.
+Proxy unicast egress is **not implemented** — the proxy emits multicast only,
+so the emitting side of the stack needs an IPv6-multicast-capable data plane
+(Multus macvlan or `hostNetwork` on a real fabric NIC). The shipped
+no-multicast path is the listener's delivery mode (chart
+`config.mode: delivery`, shard-listener v1.6.9+): a delivery-mode listener
+ingests frames over unicast from an upstream receiver-mode listener and fans
+out to consumers, so consumer-facing clusters can run on a standard CNI and
+skip the Multus and NADs releases. A proxy-side unicast egress mode remains
+an open design item.
 
 ## Cache backends (Redis / Aerospike)
 

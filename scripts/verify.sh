@@ -24,6 +24,6 @@ kubectl -n "${NS}" wait --for=condition=Ready pods -l app.kubernetes.io/name=ret
 listener_pod=$(kubectl -n "${NS}" get pods -l app.kubernetes.io/name=shard-listener -o jsonpath='{.items[0].metadata.name}')
 echo "==> scraping ${listener_pod}/metrics"
 kubectl -n "${NS}" exec "${listener_pod}" -c shard-listener -- \
-  wget -q -O- http://127.0.0.1:9100/metrics 2>/dev/null | head -n 20 || true
+  wget -q -O- http://127.0.0.1:9200/metrics 2>/dev/null | head -n 20 || true
 
 echo "==> verify ok"

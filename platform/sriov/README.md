@@ -1,9 +1,9 @@
-# SR-IOV stack — data-plane perf pool (W2)
+# SR-IOV stack — data-plane perf pool
 
 Exposes NIC **Virtual Functions** as allocatable, NUMA-topology-hinted Kubernetes
 resources so an AF_XDP `shard-proxy`/`shard-listener` pod gets **zero-copy** ingress —
-which the macvlan secondary (`mcast-fabric`) cannot give. Part of the
-orchestrated data-plane worker profile (W2).
+which the macvlan secondary (`mcast-fabric`) cannot give. Pairs with the kubelet
+`dataplane` worker profile (`distributions/k0s/k0s-config.yaml.example`).
 
 ## Components
 
@@ -31,10 +31,10 @@ kubectl apply -k platform/sriov
 The device plugin advertises **`1bsv.net/mcast_vf: 0`** until it runs on a node with
 **real SR-IOV PFs** whose vendor/driver/`pfNames` match `configmap.yaml`. On
 virtio/LXD lab NICs there are no VFs, so VF allocation and zero-copy **cannot** be
-validated here — they are validated on a real perf node (`xhost-perf-rig`), not in the
+validated here — they are validated on a physical SR-IOV-capable perf node, not in the
 functional lab. What *is* validated in the lab (no special hardware): the kustomize
 build, the DaemonSets scheduling onto the tainted pool, and the Guaranteed-QoS exclusive
--core + hugepages + memlock scheduling (doc 04 W2 proof).
+-core + hugepages + memlock scheduling.
 
 ## Tuning to the real NIC
 

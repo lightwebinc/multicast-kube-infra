@@ -1,4 +1,4 @@
-# SR-IOV stack for the tainted data-plane pool (doc 02 W2 / doc 04).
+# SR-IOV stack for the tainted data-plane pool.
 #   kubectl apply -k platform/sriov
 # Pristine upstream DaemonSets live in vendor/ (images pinned to release tags);
 # overlays add dataplane-pool scheduling + the 1bsv.net resource prefix.
