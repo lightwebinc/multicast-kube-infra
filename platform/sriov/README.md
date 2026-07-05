@@ -12,12 +12,12 @@ which the macvlan secondary (`mcast-fabric`) cannot give. Pairs with the kubelet
 | `vendor/sriovdp-daemonset.yaml` | upstream SR-IOV **Network Device Plugin** `v3.11.0` (image **pinned** off upstream `:latest`) |
 | `vendor/sriov-cni-daemonset.yaml` | upstream **sriov-cni** `v2.10.0` (image pinned) |
 | `vendor/configMap.example.yaml` | upstream pool examples (reference only) |
-| `configmap.yaml` | **our** pool — advertises `1bsv.net/mcast_vf` (Mellanox mlx5 example; tune to the real PF) |
-| `patch-dp-dataplane.yaml` / `patch-cni-dataplane.yaml` | overlay: pin scheduling to `node-role/dataplane` + tolerate `dataplane:NoSchedule`; set `--resource-prefix=1bsv.net` |
+| `configmap.yaml` | **our** pool — advertises `lightweb.net/mcast_vf` (Mellanox mlx5 example; tune to the real PF) |
+| `patch-dp-dataplane.yaml` / `patch-cni-dataplane.yaml` | overlay: pin scheduling to `node-role/dataplane` + tolerate `dataplane:NoSchedule`; set `--resource-prefix=lightweb.net` |
 | `kustomization.yaml` | composes vendor + overlays |
 
 The matching `mcast-vf` NAD lives in [`../nads/mcast-vf.yaml.gotmpl`](../nads/mcast-vf.yaml.gotmpl)
-(`type: sriov`, bound to `1bsv.net/mcast_vf`).
+(`type: sriov`, bound to `lightweb.net/mcast_vf`).
 
 ## Apply
 
@@ -28,7 +28,7 @@ kubectl apply -k platform/sriov
 
 ## ⚠ Hardware-gated — NOT lab-provable
 
-The device plugin advertises **`1bsv.net/mcast_vf: 0`** until it runs on a node with
+The device plugin advertises **`lightweb.net/mcast_vf: 0`** until it runs on a node with
 **real SR-IOV PFs** whose vendor/driver/`pfNames` match `configmap.yaml`. On
 virtio/LXD lab NICs there are no VFs, so VF allocation and zero-copy **cannot** be
 validated here — they are validated on a physical SR-IOV-capable perf node, not in the

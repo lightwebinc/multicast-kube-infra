@@ -8,7 +8,7 @@ metadata:
     # Multus reads the resourceName, allocates a free VF on the SAME NUMA node as
     # the pod's exclusive cores, and hands it to sriov-cni — the zero-copy AF_XDP
     # path macvlan cannot give.
-    k8s.v1.cni.cncf.io/resourceName: 1bsv.net/mcast_vf
+    k8s.v1.cni.cncf.io/resourceName: lightweb.net/mcast_vf
 spec:
   config: |
     {
