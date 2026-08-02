@@ -6,11 +6,12 @@ config:
   mcGroupId: {{ .Values.shared.mcGroupId | quote }}
   egressPort: {{ .Values.shared.dataPort }}
   udpListenPort: 8725
-  # Miner-tier ingress (block/coinbase/subtree frames) is disabled by default;
+  # Push-frame ingest (subtree/block push lanes) is disabled by default;
   # the user port above (8725) is transaction-only. For miner-facing
-  # deployments enable it and restrict reachability via
-  # networkPolicy.minerIngressFrom / firewall:
-  # minerListenPort: 9000
+  # deployments enable the lanes and restrict reachability via
+  # networkPolicy.pushIngressFrom / firewall:
+  # subtreeListenPort: 8726
+  # blockListenPort: 8727
   numWorkers: 2
 
 networking:

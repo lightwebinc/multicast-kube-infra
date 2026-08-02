@@ -21,8 +21,9 @@ networking:
   multus:
     networkName: {{ .Values.multus.networkName | quote }}
     namespace: {{ .Values.namespace | quote }}
-    # Per-pod IPv6: each DaemonSet pod inherits its node's fabric address via
-    # the chart's downward-API integration. Override per-node if needed.
+    # Per-pod IPv6: a DaemonSet cannot take one static Multus IP per pod —
+    # static IPAM would give every pod the same address. Use per-node
+    # releases or dynamic IPAM for distinct per-pod addresses.
     fabricIPv6: {{ .Values.fabricAddrs.listener | default "" | quote }}
     interface: net1
 

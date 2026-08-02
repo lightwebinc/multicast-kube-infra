@@ -110,7 +110,8 @@ NADs in `platform/nads/` use static IPAM (`"ipam": { "type": "static" }`),
 and each release supplies its fabric address via the chart's
 `networking.multus.fabricIPv6` value, rendered into the pod's
 `k8s.v1.cni.cncf.io/networks` annotation (see `apps/values/*.yaml.gotmpl`).
-The Helm charts surface `bindSource` (proxy / manifest / retry-endpoint)
+The Helm charts surface `bindSource` (proxy / retry-endpoint; the
+manifest chart models publishers via `manifest.publishers`)
 and `ssmBootstrap.*` lists (listener / retry-endpoint) — set
 `bindSource` to the same per-release fabric IPv6.
 

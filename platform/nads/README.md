@@ -9,6 +9,7 @@ by `scripts/platform-apply.sh`.
 | `mcast-fabric.yaml.gotmpl` | macvlan over the dedicated multicast NIC | applied |
 | `bgp-transit.yaml.gotmpl`  | macvlan over the BGP transit NIC (scenarios 40–42) | not applied (commented in `apply` script) |
 | `bgp-ibgp.yaml.gotmpl`     | macvlan over the BGP iBGP NIC | not applied |
+| `mcast-vf.yaml.gotmpl`     | SR-IOV VF from the device-plugin pool (zero-copy AF_XDP path) | applied only when `ENABLE_SRIOV=true` |
 
 ## Adding new NADs
 

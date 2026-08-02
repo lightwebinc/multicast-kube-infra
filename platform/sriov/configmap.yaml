@@ -1,4 +1,4 @@
-# SR-IOV device-plugin resource pool for the 1bsv multicast data plane.
+# SR-IOV device-plugin resource pool for the BSV multicast data plane.
 # Advertises VFs as allocatable `lightweb.net/mcast_vf` (resource-prefix set on the
 # DaemonSet). Tune vendor/device/driver/pfNames to the real perf NIC before use;
 # values below are Mellanox mlx5 (ConnectX) examples.

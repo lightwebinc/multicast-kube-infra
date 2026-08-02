@@ -18,7 +18,8 @@ networking:
     networkName: {{ .Values.multus.networkName | quote }}
     namespace: {{ .Values.namespace | quote }}
     interface: net1
-    # fabricIPv6 derived from config.nackAddr by the chart.
+    # Set networking.multus.fabricIPv6 explicitly (static IPAM assigns no
+    # address otherwise).
 
 metrics:
   enabled: true
