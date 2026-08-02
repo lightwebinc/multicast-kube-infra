@@ -10,6 +10,11 @@ subtxGen:
   pps: {{ .Values.subtxGenerator.pps }}
   duration: {{ .Values.subtxGenerator.duration | quote }}
   payloadSize: 512
+  # Explicit (not inherited): the fabric is EF-native, so the generator emits
+  # BRC-30 EF payloads regardless of which chart version is pinned (chart
+  # <= 0.3.0 still pins brc124 as its default). Every payload is exactly one
+  # valid tx of payloadSize bytes.
+  payloadFormat: "brc128"
 
 job:
   completions: 1
