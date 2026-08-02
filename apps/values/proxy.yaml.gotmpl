@@ -5,6 +5,7 @@ config:
   mcScope: {{ .Values.shared.mcScope | quote }}
   mcGroupId: {{ .Values.shared.mcGroupId | quote }}
   egressPort: {{ .Values.shared.dataPort }}
+  sourceMode: {{ .Values.shared.sourceMode | default "asm" | quote }}
   udpListenPort: 8725
   # Push-frame ingest (subtree/block push lanes) is disabled by default;
   # the user port above (8725) is transaction-only. For miner-facing

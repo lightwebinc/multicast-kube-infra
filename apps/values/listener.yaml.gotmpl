@@ -7,6 +7,7 @@ config:
   mcScope: {{ .Values.shared.mcScope | quote }}
   mcGroupId: {{ .Values.shared.mcGroupId | quote }}
   listenPort: {{ .Values.shared.dataPort }}
+  sourceMode: {{ .Values.shared.sourceMode | default "asm" | quote }}
   {{- $eps := list }}
   {{- range .Values.retryEndpoints }}
     {{- $eps = append $eps (printf "[%s]:%d" .nackAddr (int $.Values.shared.beaconPort)) }}

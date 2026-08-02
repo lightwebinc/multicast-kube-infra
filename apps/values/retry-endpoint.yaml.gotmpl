@@ -8,6 +8,7 @@ config:
   mcGroupId: {{ .Values.shared.mcGroupId | quote }}
   listenPort: {{ .Values.shared.dataPort }}
   nackPort: {{ .Values.shared.beaconPort }}
+  sourceMode: {{ .Values.shared.sourceMode | default "asm" | quote }}
   beaconEnabled: true
   cacheBackend: "memory"
   # Override to "redis" + supply redisAddr in production.

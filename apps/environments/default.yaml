@@ -24,6 +24,14 @@ shared:
   dataPort: 9001
   beaconPort: 9300
   fabricIface: "enp5s0"
+  # asm (FF0x) is the reference-composition posture: the platform NADs use
+  # static IPAM, so publishers have no distinct per-pod source address and the
+  # listener DaemonSet cannot hold one at all — both prerequisites for SSM.
+  # The charts default to ssm and their schema fails the install when it is set
+  # without a bindSource, so this must be stated explicitly here.
+  # For ssm: give each publisher a unique bindSource (dynamic IPAM/Whereabouts),
+  # and set ssmPublishersStatic or ssmBootstrap.* on the listener.
+  sourceMode: "asm"
 
 # Networking mode for the workload pods (chart value `networking.mode`).
 networkingMode: "multus"
