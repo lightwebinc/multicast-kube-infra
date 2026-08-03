@@ -8,7 +8,7 @@ chartVersions:
   proxy: "0.7.2"
   listener: "0.7.2"
   retryEndpoint: "0.5.1"
-  subtxGenerator: "0.3.0"
+  subtxGenerator: "0.3.2"
   # shard-manifest is intentionally NOT wired into apps/helmfile.yaml.gotmpl (see
   # docs/architecture.md); it runs alongside each participant per-topology.
   # Current released chart version: 0.3.1 (shard-manifest-helm).
