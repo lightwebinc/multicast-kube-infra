@@ -1,13 +1,14 @@
 # NetworkAttachmentDefinitions (NADs)
 
 Each NAD describes one Multus secondary interface. NADs are rendered with
-`envsubst` from the parent fabric values (`platform/environments/default.yaml`)
-by `scripts/platform-apply.sh`.
+`envsubst` from the `FABRIC_IFACE` / `BGP_TRANSIT_IFACE` / `BGP_IBGP_IFACE`
+environment variables consumed by `scripts/platform-apply.sh` (script-local
+defaults apply).
 
 | File | Purpose | Default state |
 |---|---|---|
 | `mcast-fabric.yaml.gotmpl` | macvlan over the dedicated multicast NIC | applied |
-| `bgp-transit.yaml.gotmpl`  | macvlan over the BGP transit NIC (scenarios 40–42) | not applied (commented in `apply` script) |
+| `bgp-transit.yaml.gotmpl`  | macvlan over the BGP transit NIC (scenarios 40–42) | not applied (excluded from the default `NADS` set; add via `NADS=` env var) |
 | `bgp-ibgp.yaml.gotmpl`     | macvlan over the BGP iBGP NIC | not applied |
 | `mcast-vf.yaml.gotmpl`     | SR-IOV VF from the device-plugin pool (zero-copy AF_XDP path) | applied only when `ENABLE_SRIOV=true` |
 

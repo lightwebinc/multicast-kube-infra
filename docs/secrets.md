@@ -29,15 +29,16 @@ The platform layer installs ESO. A `ClusterSecretStore` named
 Edit `platform/secrets/cluster-secret-store.example.yaml`, uncomment the
 matching block, copy to a non-`.example` filename, and `kubectl apply`.
 
-Charts that need a secret reference an `ExternalSecret` whose `target.name`
-matches the chart's `existingSecret` value. Example for the retry endpoint
-Redis password:
+Per-chart secret wiring (an `existingSecret` value) is forward-looking — no
+chart exposes that value yet. What works today is ESO-sourced registry pull
+credentials: an `ExternalSecret` renders a `kubernetes.io/dockerconfigjson`
+Secret that the charts' `imagePullSecrets` value references:
 
 ```yaml
 apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
-  name: retry-redis
+  name: registry-pull
   namespace: bsv-mcast
 spec:
   refreshInterval: 1h
@@ -45,13 +46,17 @@ spec:
     name: bsv-mcast-secret-store
     kind: ClusterSecretStore
   target:
-    name: retry-redis-password
+    name: registry-pull-secret
+    template:
+      type: kubernetes.io/dockerconfigjson
   data:
-    - secretKey: password
+    - secretKey: .dockerconfigjson
       remoteRef:
-        key: bsv-mcast/redis
-        property: password
+        key: bsv-mcast/registry
+        property: dockerconfigjson
 ```
+
+Then set `imagePullSecrets: [{name: registry-pull-secret}]` in chart values.
 
 ## Bootstrap secrets
 

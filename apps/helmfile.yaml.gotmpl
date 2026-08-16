@@ -3,7 +3,7 @@
 # Independent of distribution: consumes only KUBECONFIG. Charts are pulled from
 # the OCI registry published by the *-helm repos.
 #
-#   helmfile -f apps/helmfile.yaml -e reference-k0s apply
+#   helmfile -f apps/helmfile.yaml.gotmpl -e reference-k0s apply
 
 environments:
   reference-k0s:
