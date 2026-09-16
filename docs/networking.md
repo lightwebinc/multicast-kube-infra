@@ -61,7 +61,9 @@ net.ipv6.conf.all.force_mld_version = 2
 ```
 
 `distributions/k0s/bootstrap.sh` applies these via SSH and persists them under
-`/etc/sysctl.d/80-bsv-mcast.conf`.
+`/etc/sysctl.d/80-bsv-mcast.conf` (together with `net.ipv6.mld_max_msf`, below).
+It also writes the perf-tuning sysctls (UDP buffers, busy-poll, backlog) to
+`/etc/sysctl.d/81-bsv-perf.conf` and masks `irqbalance`.
 
 ### SSM source-filter limits (required when `sourceMode=ssm`)
 
@@ -78,8 +80,9 @@ net.ipv6.mld_max_msf = 1024
 
 Pick the value as `≥ 2 × N_publishers` to leave headroom for fleet
 growth and transient overlap during proxy rollouts.
-`distributions/k0s/bootstrap.sh` adds this line alongside the existing
-sysctls when the operator selects SSM at provision time.
+`distributions/k0s/bootstrap.sh` always writes this line alongside the other
+sysctls (default `1024`; override with the `MLD_MAX_MSF` environment variable
+at bootstrap time).
 
 ### PIM-SSM in the fabric
 

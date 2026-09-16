@@ -11,8 +11,8 @@ chartVersions:
   subtxGenerator: "0.3.3"
   # shard-manifest is intentionally NOT wired into apps/helmfile.yaml.gotmpl (see
   # docs/architecture.md); it runs alongside each participant per-topology.
-  # Current released chart version: 0.3.2 (shard-manifest-helm).
-  # shardManifest: "0.3.2"
+  # Current released chart version: 0.3.3 (shard-manifest-helm).
+  # shardManifest: "0.3.3"
 
 # Wire-protocol shared parameters — must agree across all four components
 # (same shardBits/scope/groupId/ports on every chart, or frames are emitted
@@ -27,8 +27,10 @@ shared:
   # asm (FF0x) is the reference-composition posture: the platform NADs use
   # static IPAM, so publishers have no distinct per-pod source address and the
   # listener DaemonSet cannot hold one at all — both prerequisites for SSM.
-  # The charts default to ssm and their schema fails the install when it is set
-  # without a bindSource, so this must be stated explicitly here.
+  # The charts default to ssm; their schemas do NOT enforce a bindSource, but
+  # the binaries fail fast at startup under ssm without one (proxy/retry:
+  # bindSource; listener: ssmBootstrap.* or ssmPublishersStatic), so asm must
+  # be stated here.
   # For ssm: give each publisher a unique bindSource (dynamic IPAM/Whereabouts),
   # and set ssmPublishersStatic or ssmBootstrap.* on the listener.
   sourceMode: "asm"

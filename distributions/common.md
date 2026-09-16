@@ -23,6 +23,7 @@ Every `distributions/<dist>/` directory must satisfy this contract so that the
    - `net.ipv6.conf.all.disable_ipv6=0`
    - `net.ipv6.conf.<fabric_iface>.disable_ipv6=0`
    - `net.ipv6.conf.all.force_mld_version=2`
+   - `net.ipv6.mld_max_msf=<MLD_MAX_MSF, default 1024>` (SSM source-filter cap)
 4. **CNI selection**: defer to `$CNI` (default `calico`). The distribution may
    pre-disable a built-in CNI (e.g. k0s ships kube-router by default) when a
    different `$CNI` is chosen.

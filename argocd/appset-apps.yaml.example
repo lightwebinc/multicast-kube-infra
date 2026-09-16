@@ -29,7 +29,7 @@ spec:
       source:
         repoURL: oci://ghcr.io/lightwebinc/charts
         chart: retry-endpoint
-        targetRevision: "0.3.0"
+        targetRevision: "0.5.3"   # latest published retry-endpoint chart; keep in step with apps/environments/default.yaml
         helm:
           values: |
             config:
