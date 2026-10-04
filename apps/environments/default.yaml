@@ -18,13 +18,13 @@ chartVersions:
   # is still below the retry-endpoint v1.9.5 floor (releases before it re-injected
   # a proxied cross-domain repair by multicast whatever the endpoint's retransmit
   # mode — the own-source repair-storm amplifier). Clearing that needs
-  # retry-endpoint-helm to publish its next chart (appVersion 1.10.1); until then
+  # charts/retry-endpoint to publish its next chart (appVersion 1.10.1); until then
   # pin image.tag on this release if the floor matters for the environment.
   retryEndpoint: "0.5.3"
   subtxGenerator: "0.3.4"
   # shard-manifest is intentionally NOT wired into apps/helmfile.yaml.gotmpl (see
   # docs/architecture.md); it runs alongside each participant per-topology.
-  # Current released chart version: 0.3.3 (shard-manifest-helm).
+  # Current released chart version: 0.3.3 (charts/shard-manifest).
   # shardManifest: "0.3.3"
 
 # Wire-protocol shared parameters — must agree across all four components

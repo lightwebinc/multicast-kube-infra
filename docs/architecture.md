@@ -54,7 +54,7 @@ retry-endpoint releases are generated from the values list — one release per
 node, each pinned to that node's fabric address.
 
 The `shard-manifest` daemon (BRC-139 announcer) has its own chart at
-[`shard-manifest-helm`](https://github.com/lightwebinc/shard-manifest-helm)
+[`charts/shard-manifest`](https://github.com/lightwebinc/charts/tree/main/charts/shard-manifest)
 and is intentionally **not** wired into the default `apps/helmfile.yaml.gotmpl` —
 it runs alongside each data-plane participant rather than as a shared
 service. Operators wire it in per their topology, or deploy it to VMs via
@@ -62,11 +62,11 @@ service. Operators wire it in per their topology, or deploy it to VMs via
 
 Chart source repositories:
 
-- [`shard-proxy-helm`](https://github.com/lightwebinc/shard-proxy-helm)
-- [`shard-listener-helm`](https://github.com/lightwebinc/shard-listener-helm)
-- [`retry-endpoint-helm`](https://github.com/lightwebinc/retry-endpoint-helm)
-- [`subtx-generator-helm`](https://github.com/lightwebinc/subtx-generator-helm)
-- [`shard-manifest-helm`](https://github.com/lightwebinc/shard-manifest-helm)
+- [`charts/shard-proxy`](https://github.com/lightwebinc/charts/tree/main/charts/shard-proxy)
+- [`charts/shard-listener`](https://github.com/lightwebinc/charts/tree/main/charts/shard-listener)
+- [`charts/retry-endpoint`](https://github.com/lightwebinc/charts/tree/main/charts/retry-endpoint)
+- [`charts/subtx-generator`](https://github.com/lightwebinc/charts/tree/main/charts/subtx-generator)
+- [`charts/shard-manifest`](https://github.com/lightwebinc/charts/tree/main/charts/shard-manifest)
 
 ## Reference topology
 
