@@ -29,7 +29,7 @@ releases:
   - name: calico
     namespace: kube-system
     chart: projectcalico/tigera-operator
-    version: v3.28.2
+    version: v3.33.0
     labels:
       cni: calico
       layer: cni
@@ -39,7 +39,7 @@ releases:
   - name: cilium
     namespace: kube-system
     chart: cilium/cilium
-    version: 1.16.3
+    version: 1.20.2
     labels:
       cni: cilium
       layer: cni
@@ -70,7 +70,7 @@ releases:
     chart: external-secrets/external-secrets
     # 2.x serves the stable external-secrets.io/v1 API the committed
     # ExternalSecrets/ClusterSecretStores target (0.10.x only served v1beta1).
-    version: 2.6.0
+    version: 2.12.0
     createNamespace: true
     labels:
       layer: secrets
