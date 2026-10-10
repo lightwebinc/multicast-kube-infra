@@ -10,7 +10,7 @@ defaults apply).
 | `mcast-fabric.yaml.gotmpl` | macvlan over the dedicated multicast NIC | applied |
 | `bgp-transit.yaml.gotmpl`  | macvlan over the BGP transit NIC (scenarios 40–42) | not applied (excluded from the default `NADS` set; add via `NADS=` env var) |
 | `bgp-ibgp.yaml.gotmpl`     | macvlan over the BGP iBGP NIC | not applied |
-| `mcast-vf.yaml.gotmpl`     | SR-IOV VF from the device-plugin pool (zero-copy AF_XDP path) | applied only when `ENABLE_SRIOV=true` |
+| `mcast-vf.yaml.gotmpl`     | SR-IOV VF from the device-plugin pool (zero-copy-capable datapath) | applied only when `ENABLE_SRIOV=true` |
 
 ## Adding new NADs
 

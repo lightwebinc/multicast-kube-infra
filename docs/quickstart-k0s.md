@@ -11,6 +11,14 @@ the bottom.
 - Local workstation with `k0sctl`, `kubectl`, `helm`, `helmfile`, `envsubst`
   in `$PATH`.
 
+### k0s version policy
+
+`distributions/k0s/k0sctl.yaml.example` pins `spec.k0s.version` to the newest
+k0s release on the **latest supported Kubernetes minor** (see the
+[k0s releases](https://github.com/k0sproject/k0s/releases)). Bump it when a new
+minor ships or a patch lands; never run a Kubernetes minor that is past its
+upstream end of life.
+
 ## 1. Configure
 
 ```bash

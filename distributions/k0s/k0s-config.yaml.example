@@ -58,7 +58,7 @@ spec:
     enabled: false
   # Worker profiles set kubelet config for a class of workers. The `dataplane`
   # profile targets data-plane/perf workers: exclusive NUMA-local cores
-  # for Guaranteed-QoS AF_XDP/SR-IOV pods. A node opts in with
+  # for Guaranteed-QoS zero-copy/SR-IOV pods. A node opts in with
   # `--profile dataplane` (k0sctl host installFlags). Harmless until referenced.
   workerProfiles:
     - name: dataplane

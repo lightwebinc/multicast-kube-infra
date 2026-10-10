@@ -1,7 +1,7 @@
 # SR-IOV stack — data-plane perf pool
 
 Exposes NIC **Virtual Functions** as allocatable, NUMA-topology-hinted Kubernetes
-resources so an AF_XDP `shard-proxy`/`shard-listener` pod gets **zero-copy** ingress —
+resources so a `shard-proxy`/`shard-listener` pod running a zero-copy-capable datapath gets **zero-copy** ingress —
 which the macvlan secondary (`mcast-fabric`) cannot give. Pairs with the kubelet
 `dataplane` worker profile (`distributions/k0s/k0s-config.yaml.example`).
 

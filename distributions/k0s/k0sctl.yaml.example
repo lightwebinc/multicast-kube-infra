@@ -44,7 +44,7 @@ spec:
     #   ssh: {address: ${NODE2_ADDR}, user: ${SSH_USER}, keyPath: ${SSH_KEY}}
 
   k0s:
-    version: "1.31.2+k0s.0"
+    version: "1.36.4+k0s.1"
     dynamicConfig: false
     config:
 __INLINE_K0S_CONFIG__
