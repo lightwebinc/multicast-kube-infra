@@ -1,4 +1,4 @@
-# ArgoCD ApplicationSet — platform addons (stub).
+# ArgoCD ApplicationSet: platform addons (stub).
 # Operator-supplied; not applied by this repo's tooling yet.
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
@@ -14,7 +14,7 @@ spec:
             repoURL: https://docs.tigera.io/calico/charts
             targetRevision: v3.28.2
             namespace: kube-system
-          # NOTE: k8snetworkplumbingwg publishes no Helm repo index — the
+          # NOTE: k8snetworkplumbingwg publishes no Helm repo index; the
           # maintained path pulls the chart via helm-git (see
           # platform/helmfile.yaml); adapt this source before use.
           - name: multus

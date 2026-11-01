@@ -14,7 +14,7 @@ Nothing secret is committed. The `.gitignore` covers:
 
 Templates are committed with `.example` suffix.
 
-## Runtime secrets — External Secrets Operator
+## Runtime secrets: External Secrets Operator
 
 The platform layer installs ESO. A `ClusterSecretStore` named
 `bsv-mcast-secret-store` is shipped as a stub (no provider). Pick one:
@@ -29,7 +29,7 @@ The platform layer installs ESO. A `ClusterSecretStore` named
 Edit `platform/secrets/cluster-secret-store.example.yaml`, uncomment the
 matching block, copy to a non-`.example` filename, and `kubectl apply`.
 
-Per-chart secret wiring (an `existingSecret` value) is forward-looking — no
+Per-chart secret wiring (an `existingSecret` value) is forward-looking; no
 chart exposes that value yet. What works today is ESO-sourced registry pull
 credentials: an `ExternalSecret` renders a `kubernetes.io/dockerconfigjson`
 Secret that the charts' `imagePullSecrets` value references:
@@ -70,9 +70,8 @@ directory (gitignored) and source from the Makefile.
 ## Recommendations for enterprise adoption
 
 1. Rotate kubeconfigs on a schedule; never share long-lived admin tokens.
-2. Use Vault or a managed secret store from day one — even if you start with a
+2. Use Vault or a managed secret store from day one, even if you start with a
    single static secret.
 3. Add audit logging to the secret backend before going to production.
-4. Once image publishing is gated behind environment approvals
-   (already true for the chart repos), require ESO-sourced pull secrets here
-   too. The same `ExternalSecret` pattern works.
+4. Require ESO-sourced pull secrets for any private registry; the same
+   `ExternalSecret` pattern works.

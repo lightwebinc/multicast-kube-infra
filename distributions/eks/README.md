@@ -16,7 +16,7 @@ Placeholder for AWS Elastic Kubernetes Service. Not implemented yet.
      over unicast and needs no Multus. Proxy unicast egress is not
      implemented, so proxies stay on a multicast-capable fabric elsewhere.
    - Run a self-hosted overlay (e.g. WeaveNet was an option, now deprecated).
-5. Skip Multus on EKS — there is no dedicated fabric NIC. The `platform/multus/`
+5. Skip Multus on EKS; there is no dedicated fabric NIC. The `platform/multus/`
    release should be conditional (`enabled: false` in the EKS environment).
 
 ## Open questions when implementation begins

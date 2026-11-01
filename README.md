@@ -1,11 +1,11 @@
 # multicast-kube-infra
 
-> Part of the [**BSV Layered Multicast**](https://github.com/lightwebinc/bsv-multicast) open-source project — see the main repository for the full architecture, design docs, and BRC specifications.
+> Part of the [**BSV Layered Multicast**](https://github.com/lightwebinc/bsv-multicast) open-source project; see the main repository for the full architecture, design docs, and BRC specifications.
 
 Kubernetes deployment infrastructure for the Bitcoin multicast transaction-distribution stack
 (`shard-proxy`, `shard-listener`, `retry-endpoint`, `subtx-generator`). The
 BRC-139 announcer (`shard-manifest`) ships as its own chart and is deployed
-alongside participants — see [`docs/architecture.md`](docs/architecture.md).
+alongside participants; see [`docs/architecture.md`](docs/architecture.md).
 
 This repo is **distribution-agnostic**: the cluster bring-up lives under
 `distributions/<dist>/`, while the platform addons (`platform/`) and the application
@@ -15,7 +15,7 @@ here is **k0s**; an `eks/` stub is in place for AWS EKS to come later.
 ## Quickstart (k0s reference)
 
 ```bash
-# 1. Copy and edit examples — these files are .gitignored.
+# 1. Copy and edit examples; these files are .gitignored.
 cp distributions/k0s/hosts.example.env       distributions/k0s/hosts.env
 cp distributions/k0s/k0sctl.yaml.example     distributions/k0s/k0sctl.yaml
 cp distributions/k0s/k0s-config.yaml.example distributions/k0s/k0s-config.yaml
@@ -29,7 +29,7 @@ make verify
 ```
 
 `make all` runs `preflight → bootstrap → platform → apps → verify`. All targets are
-idempotent — re-running converges to desired state.
+idempotent; re-running converges to desired state.
 
 ## Layout
 
@@ -64,14 +64,14 @@ make apps     ENV=production
 
 External Secrets Operator (ESO) is installed as a platform addon. A
 `ClusterSecretStore` stub is shipped at `platform/secrets/cluster-secret-store.example.yaml`
-with no provider wired — operators choose Vault, AWS Secrets Manager, GCP Secret Manager,
+with no provider wired; operators choose Vault, AWS Secrets Manager, GCP Secret Manager,
 etc. See `docs/secrets.md` for guidance. Bootstrap secrets (k0s join tokens, registry
 credentials) are kept out of Git via `*.example` templates and `.gitignore`.
 
 ## See also
 
-- [`docs/architecture.md`](docs/architecture.md) — repo philosophy and contracts
-- [`docs/quickstart-k0s.md`](docs/quickstart-k0s.md) — 10-minute walkthrough
-- [`docs/networking.md`](docs/networking.md) — Multus, CNI choices, BGP-ready notes
-- [`docs/operations.md`](docs/operations.md) — day-2 (upgrade, scale-out, drain)
+- [`docs/architecture.md`](docs/architecture.md): repo philosophy and contracts
+- [`docs/quickstart-k0s.md`](docs/quickstart-k0s.md): 10-minute walkthrough
+- [`docs/networking.md`](docs/networking.md): Multus, CNI choices, BGP-ready notes
+- [`docs/operations.md`](docs/operations.md): day-2 (upgrade, scale-out, drain)
 - Upstream architecture: [`bsv-multicast/DESIGN.md`](https://github.com/lightwebinc/bsv-multicast/blob/main/DESIGN.md)

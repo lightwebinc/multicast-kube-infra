@@ -55,7 +55,7 @@ done
 
 # SR-IOV stack for the data-plane perf pool. Opt-in and HARDWARE-GATED:
 # it advertises 0 VFs until run on nodes with real SR-IOV PFs matching
-# platform/sriov/configmap.yaml — it cannot be validated on virtio/LXD lab NICs.
+# platform/sriov/configmap.yaml; it cannot be validated on virtio/LXD lab NICs.
 if [[ "${ENABLE_SRIOV:-false}" == "true" ]]; then
   echo "==> SR-IOV device plugin + sriov-cni (data-plane pool)"
   kubectl apply -k "${ROOT}/platform/sriov"

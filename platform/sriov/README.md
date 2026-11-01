@@ -1,7 +1,7 @@
-# SR-IOV stack — data-plane perf pool
+# SR-IOV stack: data-plane perf pool
 
 Exposes NIC **Virtual Functions** as allocatable, NUMA-topology-hinted Kubernetes
-resources so a `shard-proxy`/`shard-listener` pod running a zero-copy-capable datapath gets **zero-copy** ingress —
+resources so a `shard-proxy`/`shard-listener` pod running a zero-copy-capable datapath gets **zero-copy** ingress,
 which the macvlan secondary (`mcast-fabric`) cannot give. Pairs with the kubelet
 `dataplane` worker profile (`distributions/k0s/k0s-config.yaml.example`).
 
@@ -12,7 +12,7 @@ which the macvlan secondary (`mcast-fabric`) cannot give. Pairs with the kubelet
 | `vendor/sriovdp-daemonset.yaml` | upstream SR-IOV **Network Device Plugin** `v3.11.0` (image **pinned** off upstream `:latest`) |
 | `vendor/sriov-cni-daemonset.yaml` | upstream **sriov-cni** `v2.10.0` (image pinned) |
 | `vendor/configMap.example.yaml` | upstream pool examples (reference only) |
-| `configmap.yaml` | **our** pool — advertises `lightweb.net/mcast_vf` (Mellanox mlx5 example; tune to the real PF) |
+| `configmap.yaml` | the resource pool; advertises `lightweb.net/mcast_vf` (Mellanox mlx5 example; tune to the real PF) |
 | `patch-dp-dataplane.yaml` / `patch-cni-dataplane.yaml` | overlay: pin scheduling to `node-role/dataplane` + tolerate `dataplane:NoSchedule`; set `--resource-prefix=lightweb.net` |
 | `kustomization.yaml` | composes vendor + overlays |
 
@@ -26,19 +26,19 @@ ENABLE_SRIOV=true scripts/platform-apply.sh      # opt-in; or:
 kubectl apply -k platform/sriov
 ```
 
-## ⚠ Hardware-gated — NOT lab-provable
+## Hardware-gated: not provable without SR-IOV NICs
 
 The device plugin advertises **`lightweb.net/mcast_vf: 0`** until it runs on a node with
 **real SR-IOV PFs** whose vendor/driver/`pfNames` match `configmap.yaml`. On
 virtio/LXD lab NICs there are no VFs, so VF allocation and zero-copy **cannot** be
-validated here — they are validated on a physical SR-IOV-capable perf node, not in the
+validated here; they are validated on a physical SR-IOV-capable perf node, not in the
 functional lab. What *is* validated in the lab (no special hardware): the kustomize
 build, the DaemonSets scheduling onto the tainted pool, and the Guaranteed-QoS exclusive
 -core + hugepages + memlock scheduling.
 
 ## Tuning to the real NIC
 
-Edit `configmap.yaml` `selectors` — `vendors` (e.g. `15b3` Mellanox, `8086` Intel),
+Edit `configmap.yaml` `selectors`: `vendors` (e.g. `15b3` Mellanox, `8086` Intel),
 `drivers` (`mlx5_core`, `iavf`, `vfio-pci` for DPDK), and `pfNames` (the PF, e.g.
 `ens4f0np0#0-7` to scope a VF range). VFs must be pre-created on the host
 (`echo N > /sys/class/net/<pf>/device/sriov_numvfs`, persisted by the perf-tuning role).

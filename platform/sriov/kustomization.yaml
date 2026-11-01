@@ -3,7 +3,7 @@
 # Pristine upstream DaemonSets live in vendor/ (images pinned to release tags);
 # overlays add dataplane-pool scheduling + the lightweb.net resource prefix.
 # HARDWARE-GATED: advertises 0 VFs until run on a node with real SR-IOV PFs
-# matching configmap.yaml — it cannot be validated on virtio/LXD lab NICs.
+# matching configmap.yaml; it cannot be validated on virtio/LXD lab NICs.
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:

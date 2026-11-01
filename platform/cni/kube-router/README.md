@@ -1,6 +1,6 @@
 # kube-router CNI
 
-kube-router is bundled with k0s. There is no Helm install for this option —
+kube-router is bundled with k0s. There is no Helm install for this option;
 selecting it disables the Calico/Cilium releases.
 
 ## Enabling
@@ -21,5 +21,5 @@ selecting it disables the Calico/Cilium releases.
 - No eBPF dataplane (vs. Cilium).
 
 For the multicast workload pods, the fabric data path runs over Multus macvlan
-regardless of primary CNI choice — kube-router is sufficient for control and
+regardless of primary CNI choice; kube-router is sufficient for control and
 metrics traffic.

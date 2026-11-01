@@ -3,7 +3,7 @@
 
 namespace: bsv-mcast
 
-# Pinned chart versions — each must be a chart version actually PUBLISHED to
+# Pinned chart versions; each must be a chart version actually PUBLISHED to
 # oci://ghcr.io/lightwebinc/charts (a repo's Chart.yaml is typically one ahead of
 # what is published; pinning that unreleased version fails the pull). Bump in
 # lockstep when releasing new chart artefacts.
@@ -16,7 +16,7 @@ chartVersions:
   # docs/architecture.md); it runs alongside each participant per-topology.
   # shardManifest: "0.3.4"
 
-# Wire-protocol shared parameters — must agree across all four components
+# Wire-protocol shared parameters; must agree across all four components
 # (same shardBits/scope/groupId/ports on every chart, or frames are emitted
 # to groups nobody joins).
 shared:
@@ -28,7 +28,7 @@ shared:
   fabricIface: "enp5s0"
   # asm (FF0x) is the reference-composition posture: the platform NADs use
   # static IPAM, so publishers have no distinct per-pod source address and the
-  # listener DaemonSet cannot hold one at all — both prerequisites for SSM.
+  # listener DaemonSet cannot hold one at all; both are prerequisites for SSM.
   # The charts default to ssm; their schemas do NOT enforce a bindSource, but
   # the binaries fail fast at startup under ssm without one (proxy/retry:
   # bindSource; listener: ssmBootstrap.* or ssmPublishersStatic), so asm must

@@ -1,4 +1,4 @@
-# Quickstart — k0s
+# Quickstart: k0s
 
 End-to-end k0s deployment in roughly 10 minutes against a single host (single
 controller with the worker role enabled). Multi-host expansion is documented at

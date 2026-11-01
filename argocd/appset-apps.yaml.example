@@ -1,4 +1,4 @@
-# ArgoCD ApplicationSet — bitcoin workload fan-out (stub).
+# ArgoCD ApplicationSet: bitcoin workload fan-out (stub).
 # Operator-supplied; not applied by this repo's tooling yet.
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet

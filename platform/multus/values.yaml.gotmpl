@@ -1,4 +1,4 @@
-# Multus — k8snetworkplumbingwg/multus chart.
+# Multus: k8snetworkplumbingwg/multus chart.
 #
 # Installs the Multus DaemonSet into kube-system. Pods request secondary
 # interfaces via the `k8s.v1.cni.cncf.io/networks` annotation; the
@@ -20,4 +20,4 @@ config:
   cni_conf:
     clusterNetwork: {{ if eq (env "CNI" | default "calico") "cilium" }}cilium{{ else if eq (env "CNI") "kube-router" }}kuberouter{{ else }}k8s-pod-network{{ end }}
 
-# Leave defaults for socket dirs — the chart auto-detects.
+# Leave defaults for socket dirs; the chart auto-detects.

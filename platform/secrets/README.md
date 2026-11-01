@@ -8,9 +8,9 @@ non-functional `ClusterSecretStore` stub is provided for operators to fill in.
 | Item | Status |
 |---|---|
 | ESO installed | yes (chart `external-secrets/external-secrets`) |
-| `ClusterSecretStore` provider configured | no — stub only |
+| `ClusterSecretStore` provider configured | no; stub only |
 | In-Git secret material | none |
-| Bootstrap secrets in Git | none — `*.example.env`, `.gitignore` covers operator copies |
+| Bootstrap secrets in Git | none; `*.example.env` templates, `.gitignore` covers operator copies |
 | SOPS / sealed-secrets | not used |
 
 ## Recommended providers

@@ -1,4 +1,4 @@
-# k0sctl cluster spec — copy to k0sctl.yaml and edit.
+# k0sctl cluster spec: copy to k0sctl.yaml and edit.
 #
 # Render with envsubst before applying:
 #   envsubst < k0sctl.yaml.example > k0sctl.yaml
@@ -35,7 +35,7 @@ spec:
     #   ssh: {address: ${CP3_ADDR}, user: ${SSH_USER}, keyPath: ${SSH_KEY}}
 
     # Worker pool. A data-plane/perf worker opts into the kubelet `dataplane`
-    # profile (CPU/Topology/Memory managers — see k0s-config.yaml.example):
+    # profile (CPU/Topology/Memory managers; see k0s-config.yaml.example):
     # - role: worker
     #   ssh: {address: ${NODE1_ADDR}, user: ${SSH_USER}, keyPath: ${SSH_KEY}}
     #   installFlags: ["--profile=dataplane"]

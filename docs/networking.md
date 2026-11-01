@@ -67,8 +67,8 @@ It also writes the perf-tuning sysctls (UDP buffers, busy-poll, backlog) to
 
 ### SSM source-filter limits (required when `sourceMode=ssm`)
 
-Source-Specific Multicast (RFC 4607) — used by Posture B/C/D in the
-[SSM Support Plan](https://github.com/lightwebinc/bsv-multicast/blob/main/DESIGN.md#source-specific-multicast-ssm) —
+Source-Specific Multicast (RFC 4607), used by Posture B/C/D in
+[DESIGN.md, Source-Specific Multicast](https://github.com/lightwebinc/bsv-multicast/blob/main/DESIGN.md#source-specific-multicast-ssm),
 relies on `MCAST_JOIN_SOURCE_GROUP` (RFC 3678). The Linux default cap of
 **64 source filters per socket** is below the production fleet size; with
 hundreds of publishers a fresh join returns `ENOBUFS`. Raise it on every
@@ -92,7 +92,7 @@ enable PIM-SSM on the `FF3x::/32` range:
 - **Posture B** (data-plane SSM, ASM control groups): PIM-SSM and
   PIM-SM (with an RP) coexist on the fabric. MLDv2 mandatory.
 - **Posture C** (SSM-everywhere intra-domain): PIM-SSM only. **No RP,
-  no PIM-SM, no MSDP.** This is the recommended steady state — the
+  no PIM-SM, no MSDP.** This is the recommended steady state; the
   fabric config shrinks to "enable PIM-SSM on FF3x::/32, enforce
   MLDv2".
 - **Posture D** (SSM inter-domain): PIM-SSM peering across
@@ -100,9 +100,9 @@ enable PIM-SSM on the `FF3x::/32` range:
   configuration.
 
 The control-group SSM joins use small per-group bootstrap lists (DNS
-names or IPv6 literals — typically headless-Service names fronting the
-relevant control-plane pods). See the SSM Support Plan for the per-list
-sizing and DNS-resolution semantics.
+names or IPv6 literals, typically headless-Service names fronting the
+relevant control-plane pods). See DESIGN.md for the per-list sizing and
+DNS-resolution semantics.
 
 ### Deterministic per-pod IPv6 (Multus static IPAM)
 
@@ -115,12 +115,12 @@ and each release supplies its fabric address via the chart's
 `k8s.v1.cni.cncf.io/networks` annotation (see `apps/values/*.yaml.gotmpl`).
 The Helm charts surface `bindSource` (proxy / retry-endpoint; the
 manifest chart models publishers via `manifest.publishers`)
-and `ssmBootstrap.*` lists (listener / retry-endpoint) — set
+and `ssmBootstrap.*` lists (listener / retry-endpoint); set
 `bindSource` to the same per-release fabric IPv6.
 
 `hostNetwork: true` is the fallback when Multus is unavailable but
 couples component identity to node identity. A normal Kubernetes
-`Service` does **not** solve this — it allocates a unicast VIP, not an
+`Service` does **not** solve this; it allocates a unicast VIP, not an
 interface address.
 
 ## NACK source-address pitfall
@@ -130,11 +130,11 @@ addresses it by, otherwise SLAAC source-address selection causes ACKs to be
 silently dropped (see the upstream
 [`retry-endpoint` README](https://github.com/lightwebinc/retry-endpoint)).
 The chart pattern enforced by `apps/helmfile.yaml.gotmpl` sets `config.nackAddr`
-explicitly per release — do not leave it empty.
+explicitly per release; do not leave it empty.
 
 ## Cloud-friendly fallback (no multicast)
 
-Proxy unicast egress is **not implemented** — the proxy emits multicast only,
+Proxy unicast egress is **not implemented**: the proxy emits multicast only,
 so the emitting side of the stack needs an IPv6-multicast-capable data plane
 (Multus macvlan or `hostNetwork` on a real fabric NIC). The shipped
 no-multicast path is the listener's delivery mode (chart

@@ -1,4 +1,4 @@
-# Local state — never commit
+# Local state; never commit
 .kube/
 *.kubeconfig
 kubeconfig*

@@ -1,28 +1,27 @@
-# Cilium values — primary CNI replacement.
+# Cilium values: primary CNI replacement.
 #
 # k0s sets `provider: custom` so kube-proxy is NOT installed by k0s; Cilium
 # replaces it. Adjust if running with kube-proxy enabled.
 
 kubeProxyReplacement: true
 
-# Routing mode: NATIVE, never VXLAN/Geneve. The fleet is a DISPERSED (geo) topology —
-# an overlay tunnel adds per-packet encap we don't want, and stacking WireGuard ON TOP
-# of VXLAN double-encapsulates and blackholes large packets (observed on the L2-adjacent
-# reference cluster: tunnel mode + WG => cross-node pods unreachable for >MTU-overhead
-# packets). With native
+# Routing mode: NATIVE, never VXLAN/Geneve. The fleet is a DISPERSED (geo) topology;
+# an overlay tunnel adds per-packet encap, and stacking WireGuard ON TOP of VXLAN
+# double-encapsulates and blackholes packets larger than the MTU minus both
+# overheads (cross-node pods become unreachable for large packets). With native
 # routing + WireGuard, WG's allowed-ips carries POD-origin traffic between nodes.
 #
 # autoDirectNodeRoutes: WG allowed-ips only covers POD-origin traffic (eBPF redirects it
-# to cilium_wg0). HOST-origin traffic to a remote pod — e.g. the hostNetwork
-# konnectivity-agent dialing a ClusterIP/pod, which the apiserver admission webhooks ride
-# — uses the kernel routing table, which has NO route for remote pod CIDRs, so it falls
-# to the default gateway and is dropped. Fix depends on topology:
-#   - L2-adjacent nodes (one subnet, e.g. the L2-adjacent reference cluster): set true → Cilium installs
-#     `<remote podCIDR> via <nodeIP>` so host->remote-pod works (WG still encrypts).
+# to cilium_wg0). HOST-origin traffic to a remote pod (e.g. the hostNetwork
+# konnectivity-agent dialing a ClusterIP/pod, which the apiserver admission webhooks
+# ride) uses the kernel routing table, which has NO route for remote pod CIDRs, so it
+# falls to the default gateway and is dropped. Fix depends on topology:
+#   - L2-adjacent nodes (one subnet): set true, so Cilium installs
+#     `<remote podCIDR> via <nodeIP>` and host->remote-pod works (WG still encrypts).
 #   - Dispersed/routed-fabric nodes (not one L2): keep false and let the fabric route pod
 #     CIDRs; direct routes can't be installed across L3.
-# On the L2-adjacent reference cluster: host->remote-pod (admission webhooks) was broken
-# until this was enabled — pod-to-pod looked fine, masking it.
+# Pod-to-pod traffic works either way, so a broken host->remote-pod path shows up only
+# as failing admission webhooks, metrics or logs.
 routingMode: native
 ipv4NativeRoutingCIDR: {{ .Values.clusterCIDR }}
 ipv6NativeRoutingCIDR: {{ .Values.clusterCIDRv6 }}
@@ -34,7 +33,7 @@ autoDirectNodeRoutes: {{ .Values.autoDirectNodeRoutes | default false }}
 MTU: {{ .Values.podMTU | default 1380 }}
 
 # REQUIRED with kubeProxyReplacement on dedicated controllers: Cilium must reach
-# the apiserver WITHOUT going through the kubernetes ClusterIP (10.96.0.1) — that
+# the apiserver WITHOUT going through the kubernetes ClusterIP (10.96.0.1); that
 # ClusterIP only works once Cilium itself has programmed it, a chicken-and-egg that
 # makes every cilium-agent crashloop ("dial 10.96.0.1:443: operation not permitted")
 # whenever the agents and apiserver restart together. Point Cilium at a kube-proxy-
@@ -70,17 +69,17 @@ bgpControlPlane:
 # Transparent node-to-node encryption for multi-node clusters; enable per
 # environment. Pod traffic is WireGuard-encrypted between nodes.
 # `devices` pins the WireGuard/native-routing underlay to the WAN NIC(s) so the
-# encryption endpoint is the WAN address — NOT the node InternalIP, which on
+# encryption endpoint is the WAN address, NOT the node InternalIP, which on
 # nodes joined over a management overlay is the overlay address used as kubelet
 # --node-ip. This keeps the pod mesh OUT of any management overlay (no
 # double-encapsulation): kubelet<->apiserver rides the overlay, pods ride
-# Cilium WG on the WAN — two parallel encrypted planes.
+# Cilium WG on the WAN: two parallel encrypted planes.
 #
 # nodeEncryption (HOST traffic) is a SEPARATE toggle, default OFF: host/kubelet
 # traffic rides the underlay (or a management overlay), so Cilium encrypts PODS
-# only — encrypting host traffic too would double-encrypt that path. Lab-proven
-# (2026-06-23): cross-node pod ping = WireGuard UDP/51871 on the WAN, zero
-# cleartext; kube-proxy-replacement on the WAN device.
+# only; encrypting host traffic too would double-encrypt that path. Cross-node pod
+# traffic then rides WireGuard UDP/51871 on the WAN with no cleartext, and
+# kube-proxy-replacement runs on the WAN device.
 encryption:
   enabled: {{ .Values.encryption.enabled }}
   type: wireguard

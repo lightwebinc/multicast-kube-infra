@@ -20,7 +20,7 @@ kubectl -n "${NS}" wait --for=condition=Ready pods -l app.kubernetes.io/name=sha
 echo "==> wait for retry endpoints Ready"
 kubectl -n "${NS}" wait --for=condition=Ready pods -l app.kubernetes.io/name=retry-endpoint --timeout=120s || true
 
-# Pull a sample listener metric — verifies primary CNI metrics path works.
+# Pull a sample listener metric; verifies the primary CNI metrics path works.
 listener_pod=$(kubectl -n "${NS}" get pods -l app.kubernetes.io/name=shard-listener -o jsonpath='{.items[0].metadata.name}')
 echo "==> scraping ${listener_pod}/metrics"
 kubectl -n "${NS}" exec "${listener_pod}" -c shard-listener -- \

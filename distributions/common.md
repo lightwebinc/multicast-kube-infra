@@ -32,7 +32,7 @@ Every `distributions/<dist>/` directory must satisfy this contract so that the
 
 ## Optional files
 
-- `hosts.example.env` — shell-sourced environment with `SSH_USER`, `SSH_KEY`,
+- `hosts.example.env`: shell-sourced environment with `SSH_USER`, `SSH_KEY`,
   per-node hostnames/IPs.
 - Distribution-specific config templates (e.g. `k0sctl.yaml.example`).
 

@@ -6,7 +6,7 @@ Reference k0s deployment driven by [`k0sctl`](https://github.com/k0sproject/k0sc
 
 The repo defaults to **1 controller with the worker role enabled** (`role: controller+worker`)
 so the smallest viable lab is a single host. The expansion path to **1 controller + 2
-workers (one integrated)** is a values diff in `k0sctl.yaml` — add two `role: worker`
+workers (one integrated)** is a values diff in `k0sctl.yaml`: add two `role: worker`
 host entries, no other change.
 
 ## Files
@@ -27,8 +27,8 @@ host entries, no other change.
 - `k0sctl` in `$PATH` (https://github.com/k0sproject/k0sctl/releases).
 - `kubectl` in `$PATH`.
 - SSH access to all target hosts as a user with passwordless sudo.
-- Each target host running a recent Linux kernel (Ubuntu 24.04 / FreeBSD 14
-  validated upstream — only Linux supports k0s today).
+- Each target host running a recent Linux kernel (Ubuntu 24.04 validated;
+  k0s supports Linux only).
 - The dedicated multicast NIC is configured and reachable on every node before
   bootstrap (k0s does not provision it).
 

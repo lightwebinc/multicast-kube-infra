@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Apply bsv-mcast/* node labels driven by hosts.env.
-# Idempotent — kubectl label --overwrite.
+# Idempotent: kubectl label --overwrite.
 set -euo pipefail
 
 HERE="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"

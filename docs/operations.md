@@ -18,7 +18,7 @@ make apps
 ```
 
 Listener drain-on-shutdown is controlled by the chart's `config.drainTimeout`
-(default `0s` — disabled). Set it, plus a `terminationGracePeriodSeconds` at
+(default `0s`, disabled). Set it, plus a `terminationGracePeriodSeconds` at
 least as large, if in-flight NACK cycles should complete before the socket
 closes.
 
@@ -40,10 +40,10 @@ See [`quickstart-k0s.md`](quickstart-k0s.md) §4.
 ## Metrics
 
 External Prometheus scrapes the **primary CNI** pod IPs. The macvlan
-secondary (`net1`) carries multicast data only — never scrape it.
+secondary (`net1`) carries multicast data only; never scrape it.
 
 ```yaml
-# prometheus.yml — Kubernetes SD against the k0s API
+# prometheus.yml: Kubernetes SD against the k0s API
 scrape_configs:
   - job_name: bsv-mcast
     kubernetes_sd_configs:
@@ -89,9 +89,9 @@ for the manifest and generator charts). Set `logFormat: json` for one-JSON-
 object-per-line stdout that a node-local collector can ship; the log level is
 runtime-togglable via `POST /loglevel` on the metrics port and SIGHUP. Each pod
 emits a one-shot `host.inventory` event and a `<prefix>_host_info` gauge at
-startup. The **log collector** (the decided architecture is a Grafana Alloy
-DaemonSet → OTLP → Loki) and **node_exporter** are a deferred rollout — like
-Prometheus/Grafana, this repo does not install them. See the
+startup. As with Prometheus/Grafana, this repo installs neither a log
+collector nor `node_exporter`; a node-local collector shipping OTLP to a log
+store is the expected pairing. See the
 [Unified Component Logging](https://github.com/lightwebinc/shard-common/blob/main/docs/logging.md).
 
 ## Backups

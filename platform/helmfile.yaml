@@ -1,4 +1,4 @@
-# Platform layer — installed once per cluster, distribution-agnostic.
+# Platform layer: installed once per cluster, distribution-agnostic.
 #
 # Selectors keep this file declarative across CNI choices:
 #   helmfile -f platform/helmfile.yaml --selector cni={{ env "CNI" | default "calico" }} apply
@@ -46,7 +46,7 @@ releases:
     values:
       - cni/cilium/values.yaml.gotmpl
 
-  # kube-router has no separate Helm install — it's enabled via k0s-config.yaml
+  # kube-router has no separate Helm install; it's enabled via k0s-config.yaml
   # (provider: kuberouter). Selecting CNI=kube-router skips the CNI install
   # entirely; see cni/kube-router/README.md.
 

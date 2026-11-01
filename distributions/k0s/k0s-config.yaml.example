@@ -1,4 +1,4 @@
-# k0s ClusterConfig — copy to k0s-config.yaml and edit.
+# k0s ClusterConfig: copy to k0s-config.yaml and edit.
 #
 # bootstrap.sh inlines this file into k0sctl.yaml under spec.k0s.config.
 #
@@ -13,7 +13,7 @@ metadata:
   name: k0s
 spec:
   # HA control plane (3 dedicated controllers): float an apiserver VIP with CPLB.
-  # LESSONS FROM THE L2-adjacent reference cluster migration, all the hard way:
+  # Constraints that hold for this shape:
   #  - Put the VIP in `api.sans` ONLY, NOT `api.externalAddress`: an external API
   #    address is mutually exclusive with nodeLocalLoadBalancing (NLLB), and NLLB is
   #    required (see below). The cert still covers the VIP via the SAN; CPLB floats it.
@@ -35,13 +35,13 @@ spec:
       enabled: true
       IPv6podCIDR: "fd20:0:0:1::/64"
       IPv6serviceCIDR: "fd30:0:0:1::/108"
-    # Cilium owns eBPF kube-proxy-replacement — disable the bundled kube-proxy.
+    # Cilium owns eBPF kube-proxy-replacement; disable the bundled kube-proxy.
     kubeProxy:
       disabled: true
     # REQUIRED for konnectivity HA behind dedicated controllers: a per-worker envoy
     # balances internal node->control-plane traffic (kubelet + konnectivity-agent)
     # across ALL controllers, so every apiserver has konnectivity agents. The agent
-    # then targets localhost:7132 and the apiserver is served at 127.0.0.1:7443 — the
+    # then targets localhost:7132 and the apiserver is served at 127.0.0.1:7443, the
     # endpoint Cilium must use as k8sServiceHost (see cni/cilium/values.yaml.gotmpl).
     nodeLocalLoadBalancing:
       enabled: true
@@ -53,7 +53,7 @@ spec:
         vrrpInstances:
           - virtualIPs: [10.0.0.10/24]
             authPass: CHANGEME    # VRRP password must be <= 8 chars (keepalived limit)
-        # NO virtualServers — see the lesson above.
+        # NO virtualServers; see the constraints above.
   telemetry:
     enabled: false
   # Worker profiles set kubelet config for a class of workers. The `dataplane`

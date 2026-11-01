@@ -1,4 +1,4 @@
-# multicast-kube-infra — top-level Makefile
+# multicast-kube-infra: top-level Makefile
 #
 # All targets idempotent. Override variables on the command line:
 #   make all DIST=k0s CNI=calico ENV=reference-k0s

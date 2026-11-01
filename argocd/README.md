@@ -9,13 +9,13 @@ pull-based deployment.
 
 1. Install ArgoCD into its own namespace (separate Helmfile under `platform/`).
 2. Apply `appset-platform.yaml` (CNI + Multus + ESO + NADs).
-3. Apply `appset-apps.yaml` — an `ApplicationSet` that fans out per retry
+3. Apply `appset-apps.yaml`, an `ApplicationSet` that fans out per retry
    endpoint via the list generator, mirroring `apps/helmfile.yaml.gotmpl`.
 4. Enable `automated.selfHeal: true` once values stabilize.
 
 ## Files
 
-- `appset-platform.yaml.example` — placeholder.
-- `appset-apps.yaml.example` — placeholder, mirroring the per-node
+- `appset-platform.yaml.example`: placeholder.
+- `appset-apps.yaml.example`: placeholder, mirroring the per-node
   retry-endpoint fan-out that `apps/helmfile.yaml.gotmpl` renders (one release
   per node from the values list).

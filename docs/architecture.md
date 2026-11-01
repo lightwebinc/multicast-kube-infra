@@ -33,29 +33,29 @@ See [`../distributions/common.md`](../distributions/common.md). Summary:
 
 `platform/helmfile.yaml` composes the cluster-level addons:
 
-- **CNI** — Calico (default), Cilium, or k0s-bundled kube-router. Selected by
+- **CNI**: Calico (default), Cilium, or k0s-bundled kube-router. Selected by
   the `CNI` environment variable.
-- **Multus** — installs the multi-network DaemonSet that lets pods request a
+- **Multus**: installs the multi-network DaemonSet that lets pods request a
   secondary macvlan interface on the dedicated multicast NIC.
-- **External Secrets Operator** — installed but un-configured. The
+- **External Secrets Operator**: installed but un-configured. The
   `ClusterSecretStore` stub is shipped without a provider; operators choose
   Vault, AWS Secrets Manager, etc.
-- **NADs** — `mcast-fabric` is applied by default. `bgp-transit` and
+- **NADs**: `mcast-fabric` is applied by default. `bgp-transit` and
   `bgp-ibgp` are available for BGP scenarios, and `mcast-vf` binds an SR-IOV
   VF; none of these are applied by default.
-- **SR-IOV** (`platform/sriov/`) — device plugin + sriov-cni for the
+- **SR-IOV** (`platform/sriov/`): device plugin + sriov-cni for the
   data-plane perf pool. Opt-in via `ENABLE_SRIOV=true`; hardware-gated.
 
 ## Application layer
 
 `apps/helmfile.yaml.gotmpl` installs the data-plane bitcoin charts (`shard-proxy`,
 `shard-listener`, `retry-endpoint`, `subtx-generator`) from OCI. Per-node
-retry-endpoint releases are generated from the values list — one release per
+retry-endpoint releases are generated from the values list, one release per
 node, each pinned to that node's fabric address.
 
 The `shard-manifest` daemon (BRC-139 announcer) has its own chart at
 [`charts/shard-manifest`](https://github.com/lightwebinc/charts/tree/main/charts/shard-manifest)
-and is intentionally **not** wired into the default `apps/helmfile.yaml.gotmpl` —
+and is intentionally **not** wired into the default `apps/helmfile.yaml.gotmpl`;
 it runs alongside each data-plane participant rather than as a shared
 service. Operators wire it in per their topology, or deploy it to VMs via
 [`manifest-infra`](https://github.com/lightwebinc/manifest-infra).
@@ -73,11 +73,11 @@ Chart source repositories:
 The default reference is **1 controller with worker role enabled**. To grow to
 **1 controller + 2 workers (one integrated)**, add two `role: worker` entries
 to `distributions/k0s/k0sctl.yaml` and re-run `make bootstrap`. The platform
-and app layers do not change — Helmfile re-renders against the new node count
+and app layers do not change; Helmfile re-renders against the new node count
 and the listener DaemonSet automatically schedules onto the new nodes.
 
 ## Cross-references
 
-- [`bsv-multicast/DESIGN.md`](https://github.com/lightwebinc/bsv-multicast/blob/main/DESIGN.md) — system design and deployment rationale (the containerization planning docs were folded into the main design doc and this repo).
-- [k0s quickstart](quickstart-k0s.md) — the k0s reference deployment this repo implements.
+- [`bsv-multicast/DESIGN.md`](https://github.com/lightwebinc/bsv-multicast/blob/main/DESIGN.md): system design and deployment rationale.
+- [k0s quickstart](quickstart-k0s.md): the k0s reference deployment this repo implements.
 - The distribution contract (§ above) and the per-service Helm charts are the operator wiring patterns.

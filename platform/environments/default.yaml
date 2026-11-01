@@ -20,9 +20,9 @@ k8sServicePort: "7443"
 # convention used elsewhere in the bsv-multicast docs).
 fabricSubnet: "fd20::/64"
 
-# Cilium autoDirectNodeRoutes — install direct routes for remote pod CIDRs via node IPs.
+# Cilium autoDirectNodeRoutes: install direct routes for remote pod CIDRs via node IPs.
 # REQUIRED on L2-adjacent clusters (all nodes on one subnet, e.g. a single L2
-# subnet such as 192.0.2.0/24) so HOST-origin traffic reaches remote pods — the konnectivity-agent
+# subnet such as 192.0.2.0/24) so HOST-origin traffic reaches remote pods; the konnectivity-agent
 # (hostNetwork) dials ClusterIPs/pods for admission webhooks via the kernel routing table,
 # which otherwise has no remote-pod route. Set false on dispersed/routed-fabric clusters
 # (nodes not on one L2) and let the fabric route pod CIDRs. See cni/cilium/values.yaml.gotmpl.
@@ -35,17 +35,16 @@ bgp:
 
 # Cilium transparent node-to-node encryption for multi-node clusters. When
 # enabled, pin `devices` to the WAN NIC(s) so the WireGuard underlay endpoint
-# is the WAN address — not a management-overlay node InternalIP (keeps the
-# pod mesh out of any management overlay — no double-encapsulation).
+# is the WAN address, not a management-overlay node InternalIP (keeps the
+# pod mesh out of any management overlay: no double-encapsulation).
 # Pod MTU for the native-routing + WireGuard datapath (see cni/cilium/values.yaml.gotmpl).
 # 1380 + ~60 WG = ~1440 on-wire. Lower it per-fabric for lower-MTU WAN paths.
 podMTU: 1380
 
 encryption:
-  # ON: WireGuard with NATIVE routing (no VXLAN). Proven on the L2-adjacent reference
-  # cluster once routingMode=native + MTU=1380 were set — cross-node pods, DNS, OIDC all healthy.
-  # The earlier blackhole was VXLAN+WG double-encap with an unreduced pod MTU, NOT WG
-  # itself. Keep routingMode native (default.yaml/gotmpl) whenever this is enabled.
+  # ON: WireGuard with NATIVE routing (no VXLAN). VXLAN+WG double-encapsulation with
+  # an unreduced pod MTU blackholes large cross-node packets; WireGuard itself does
+  # not. Keep routingMode native (default.yaml/gotmpl) whenever this is enabled.
   enabled: true
   # nodeEncryption (host/kubelet traffic) stays off: Cilium encrypts pods only;
   # host/kubelet paths ride the underlay (or an operator-managed overlay).
