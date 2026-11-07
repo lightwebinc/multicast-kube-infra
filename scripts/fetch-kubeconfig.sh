@@ -14,9 +14,6 @@ case "${DIST}" in
     [[ -f k0sctl.yaml ]] || { echo "no k0sctl.yaml; run bootstrap first" >&2; exit 1; }
     k0sctl kubeconfig --config k0sctl.yaml > "${KUBECONFIG_PATH}"
     ;;
-  eks)
-    echo "EKS distribution not yet implemented" >&2; exit 1
-    ;;
   *)
     echo "unknown DIST=${DIST}" >&2; exit 1
     ;;

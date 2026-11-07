@@ -1,16 +1,18 @@
 # multicast-kube-infra
 
+[![Lint](https://github.com/lightwebinc/multicast-kube-infra/actions/workflows/lint.yml/badge.svg)](https://github.com/lightwebinc/multicast-kube-infra/actions/workflows/lint.yml)
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
+
 > Part of the [**BSV Layered Multicast**](https://github.com/lightwebinc/bsv-multicast) open-source project; see the main repository for the full architecture, design docs, and BRC specifications.
 
-Kubernetes deployment infrastructure for the Bitcoin multicast transaction-distribution stack
+Kubernetes deployment infrastructure for the BSV multicast transaction-distribution stack
 (`shard-proxy`, `shard-listener`, `retry-endpoint`, `subtx-generator`). The
 BRC-139 announcer (`shard-manifest`) ships as its own chart and is deployed
 alongside participants; see [`docs/architecture.md`](docs/architecture.md).
 
 This repo is **distribution-agnostic**: the cluster bring-up lives under
 `distributions/<dist>/`, while the platform addons (`platform/`) and the application
-layer (`apps/`) consume only a `KUBECONFIG`. The first concrete distribution shipped
-here is **k0s**; an `eks/` stub is in place for AWS EKS to come later.
+layer (`apps/`) consume only a `KUBECONFIG`. The shipped distribution is **k0s**.
 
 ## Quickstart (k0s reference)
 
@@ -36,14 +38,12 @@ idempotent; re-running converges to desired state.
 | Path | Contents |
 |---|---|
 | `distributions/k0s/`     | k0sctl-driven cluster bootstrap. SSH host list. |
-| `distributions/eks/`     | Stub for AWS EKS. |
 | `platform/cni/`          | Calico (default), Cilium, kube-router options. |
 | `platform/multus/`       | Multus CNI install. |
 | `platform/nads/`          | `NetworkAttachmentDefinition` templates (`mcast-fabric`, `bgp-transit`, `bgp-ibgp`, `mcast-vf`). |
 | `platform/sriov/`        | SR-IOV device plugin + CNI for the data-plane perf pool (opt-in via `ENABLE_SRIOV=true`). |
-| `platform/secrets/`      | External Secrets Operator + `ClusterSecretStore` stub. |
-| `apps/`                   | Helmfile composing the data-plane bitcoin charts (proxy/listener/retry/subtx-gen). |
-| `argocd/`                 | Stub for future ApplicationSet adoption. |
+| `platform/secrets/`      | External Secrets Operator + `ClusterSecretStore` template. |
+| `apps/`                   | Helmfile composing the data-plane charts (proxy/listener/retry/subtx-gen). |
 | `scripts/`                | Operator entry points (called from the Makefile). |
 | `docs/`                   | Architecture, quickstart, networking, secrets, ops, troubleshooting. |
 
@@ -63,7 +63,7 @@ make apps     ENV=production
 ## Secrets posture
 
 External Secrets Operator (ESO) is installed as a platform addon. A
-`ClusterSecretStore` stub is shipped at `platform/secrets/cluster-secret-store.example.yaml`
+`ClusterSecretStore` template is shipped at `platform/secrets/cluster-secret-store.example.yaml`
 with no provider wired; operators choose Vault, AWS Secrets Manager, GCP Secret Manager,
 etc. See `docs/secrets.md` for guidance. Bootstrap secrets (k0s join tokens, registry
 credentials) are kept out of Git via `*.example` templates and `.gitignore`.
@@ -75,3 +75,7 @@ credentials) are kept out of Git via `*.example` templates and `.gitignore`.
 - [`docs/networking.md`](docs/networking.md): Multus, CNI choices, BGP-ready notes
 - [`docs/operations.md`](docs/operations.md): day-2 (upgrade, scale-out, drain)
 - Upstream architecture: [`bsv-multicast/DESIGN.md`](https://github.com/lightwebinc/bsv-multicast/blob/main/DESIGN.md)
+
+## License
+
+Apache 2.0; see [LICENSE](LICENSE).

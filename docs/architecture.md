@@ -1,9 +1,8 @@
 # Architecture
 
-This repo deploys the four bitcoin multicast components onto a Kubernetes
-cluster while staying **distribution-agnostic**. The first concrete distribution
-is k0s; AWS EKS and others can be added without touching the platform or app
-layers.
+This repo deploys the four BSV multicast components onto a Kubernetes
+cluster while staying **distribution-agnostic**. The shipped distribution is
+k0s; another can be added without touching the platform or app layers.
 
 ## Three layers
 
