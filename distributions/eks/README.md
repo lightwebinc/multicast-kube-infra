@@ -12,7 +12,7 @@ Placeholder for AWS Elastic Kubernetes Service. Not implemented yet.
 4. Pick a **multicast-friendly** path. EKS does not support IPv6 multicast on
    the primary VPC CNI; options:
    - Consumer-facing only: run listeners in delivery mode (chart
-     `config.mode: delivery`, shard-listener v1.6.9+), which ingests frames
+     `config.mode: delivery`), which ingests frames
      over unicast and needs no Multus. Proxy unicast egress is not
      implemented, so proxies stay on a multicast-capable fabric elsewhere.
    - Run a self-hosted overlay (e.g. WeaveNet was an option, now deprecated).

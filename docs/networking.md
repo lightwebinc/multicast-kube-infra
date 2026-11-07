@@ -84,6 +84,17 @@ growth and transient overlap during proxy rollouts.
 sysctls (default `1024`; override with the `MLD_MAX_MSF` environment variable
 at bootstrap time).
 
+### Reference composition posture
+
+`apps/environments/default.yaml` sets `shared.sourceMode: asm` for the reference
+composition even though the charts and the host-deployment repos default to
+`ssm`: the shipped NADs use static IPAM, so publishers have no distinct per-pod
+source address and the listener DaemonSet cannot hold one, and the binaries
+fail fast under `ssm` without `bindSource` / `ssmBootstrap.*`. Switch to `ssm`
+only after giving every publisher a unique `bindSource` (dynamic IPAM) and
+listing the publishers on the listener (`ssmPublishersStatic` or
+`ssmBootstrap.*`).
+
 ### PIM-SSM in the fabric
 
 When any deployment opts into `sourceMode=ssm` the upstream router MUST
@@ -138,7 +149,7 @@ Proxy unicast egress is **not implemented**: the proxy emits multicast only,
 so the emitting side of the stack needs an IPv6-multicast-capable data plane
 (Multus macvlan or `hostNetwork` on a real fabric NIC). The shipped
 no-multicast path is the listener's delivery mode (chart
-`config.mode: delivery`, shard-listener v1.6.9+): a delivery-mode listener
+`config.mode: delivery`): a delivery-mode listener
 ingests frames over unicast from an upstream receiver-mode listener and fans
 out to consumers, so consumer-facing clusters can run on a standard CNI and
 skip the Multus and NADs releases. A proxy-side unicast egress mode remains

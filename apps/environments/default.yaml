@@ -8,13 +8,13 @@ namespace: bsv-mcast
 # what is published; pinning that unreleased version fails the pull). Bump in
 # lockstep when releasing new chart artefacts.
 chartVersions:
-  proxy: "0.7.8"           # appVersion 1.40.1
-  listener: "0.8.1"        # appVersion 1.29.1
-  retryEndpoint: "0.5.5"   # appVersion 1.12.0 (at or above the v1.9.5 repair-storm floor)
-  subtxGenerator: "0.3.6"  # appVersion 0.4.0
+  proxy: "0.7.10"          # appVersion 1.42.0
+  listener: "0.8.3"        # appVersion 1.35.0
+  retryEndpoint: "0.5.6"   # appVersion 1.14.1 (at or above the v1.9.5 repair-storm floor)
+  subtxGenerator: "0.3.7"  # appVersion 0.4.1
   # shard-manifest is intentionally NOT wired into apps/helmfile.yaml.gotmpl (see
   # docs/architecture.md); it runs alongside each participant per-topology.
-  # shardManifest: "0.3.4"
+  # shardManifest: "0.3.5"  # appVersion 0.4.3
 
 # Wire-protocol shared parameters; must agree across all four components
 # (same shardBits/scope/groupId/ports on every chart, or frames are emitted
