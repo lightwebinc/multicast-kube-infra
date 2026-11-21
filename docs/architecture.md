@@ -71,7 +71,7 @@ Chart source repositories:
 
 The default reference is **1 controller with worker role enabled**. To grow to
 **1 controller + 2 workers (one integrated)**, add two `role: worker` entries
-to `distributions/k0s/k0sctl.yaml` and re-run `make bootstrap`. The platform
+to `distributions/k0s/k0sctl.yaml.example` and re-run `make bootstrap`. The platform
 and app layers do not change; Helmfile re-renders against the new node count
 and the listener DaemonSet automatically schedules onto the new nodes.
 

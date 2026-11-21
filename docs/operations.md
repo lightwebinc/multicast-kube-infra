@@ -5,7 +5,7 @@
 ### Upgrade k0s
 
 ```bash
-# Edit distributions/k0s/k0sctl.yaml to bump spec.k0s.version
+# Edit distributions/k0s/k0sctl.yaml.example to bump spec.k0s.version
 make bootstrap        # k0sctl performs a rolling upgrade
 make verify
 ```

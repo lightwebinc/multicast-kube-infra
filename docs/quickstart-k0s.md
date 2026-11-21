@@ -25,14 +25,16 @@ upstream end of life.
 cd multicast-kube-infra
 
 cp distributions/k0s/hosts.example.env       distributions/k0s/hosts.env
-cp distributions/k0s/k0sctl.yaml.example     distributions/k0s/k0sctl.yaml
 cp distributions/k0s/k0s-config.yaml.example distributions/k0s/k0s-config.yaml
 
 vim distributions/k0s/hosts.env       # SSH user/key + NODE0_*
 ```
 
 The `*.example.*` files are templates checked into Git. Their non-example
-counterparts are operator-specific and `.gitignored`.
+counterparts are operator-specific and `.gitignored`. `k0sctl.yaml` is not
+copied: `bootstrap.sh` renders it from `k0sctl.yaml.example`, `k0s-config.yaml`
+and the `hosts.env` variables on every run, so host and version changes go in
+the template.
 
 ## 2. Deploy
 
@@ -72,7 +74,8 @@ listeners, `9100` on proxy). External Prometheus scrape examples live in
    export NODE2_HOST="…" NODE2_ADDR="…" NODE2_FABRIC_IFACE="…" NODE2_FABRIC_ADDR="…"
    ```
 2. Uncomment the matching `- role: worker` blocks in
-   `distributions/k0s/k0sctl.yaml`.
+   `distributions/k0s/k0sctl.yaml.example` (the rendered `k0sctl.yaml` is
+   overwritten on every bootstrap).
 3. `make bootstrap` (idempotent).
 4. `make label-nodes apps verify`.
 

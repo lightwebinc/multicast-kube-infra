@@ -6,15 +6,15 @@ Reference k0s deployment driven by [`k0sctl`](https://github.com/k0sproject/k0sc
 
 The repo defaults to **1 controller with the worker role enabled** (`role: controller+worker`)
 so the smallest viable lab is a single host. The expansion path to **1 controller + 2
-workers (one integrated)** is a values diff in `k0sctl.yaml`: add two `role: worker`
+workers (one integrated)** is a values diff in `k0sctl.yaml.example`: add two `role: worker`
 host entries, no other change.
 
 ## Files
 
 | File | In Git | Purpose |
 |---|---|---|
-| `k0sctl.yaml.example`     | yes | Template host list + role assignment. |
-| `k0sctl.yaml`             | no  | Operator-edited copy. |
+| `k0sctl.yaml.example`     | yes | Template host list + role assignment; edit it to add hosts or bump the k0s version. |
+| `k0sctl.yaml`             | no  | Rendered by `bootstrap.sh` on every run; edits are overwritten. |
 | `k0s-config.yaml.example` | yes | Template `spec.k0s.config` (`ClusterConfig`). |
 | `k0s-config.yaml`         | no  | Operator-edited copy. |
 | `hosts.example.env`       | yes | Shell environment template (SSH user, key, host map). |
@@ -36,7 +36,6 @@ host entries, no other change.
 
 ```bash
 cp hosts.example.env       hosts.env
-cp k0sctl.yaml.example     k0sctl.yaml
 cp k0s-config.yaml.example k0s-config.yaml
 # edit the copies …
 ./bootstrap.sh
@@ -45,9 +44,14 @@ cp k0s-config.yaml.example k0s-config.yaml
 `bootstrap.sh` will:
 
 1. Source `hosts.env`.
-2. Run `k0sctl apply -c k0sctl.yaml` (rendered with the env vars).
+2. Render `k0sctl.yaml` from `k0sctl.yaml.example` (host variables substituted,
+   `k0s-config.yaml` inlined under `spec.k0s.config`) and run `k0sctl apply`.
 3. Fetch the kubeconfig to `${KUBECONFIG_PATH:-../../.kube/k0s.config}`.
-4. Wait for all nodes to reach `Ready`.
+4. Apply the multicast sysctls on every node and persist them in
+   `/etc/sysctl.d/80-bsv-mcast.conf`.
+5. Write the perf-tuning sysctls to `/etc/sysctl.d/81-bsv-perf.conf`, stop and
+   mask `irqbalance`, and disable deep CPU idle states until the next boot.
+6. Wait for all nodes to reach `Ready`.
 
 ## CNI
 
