@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Smoke verification: pods Ready, listener metric endpoint reachable.
+# Smoke verification: pods Ready; prints a sample of one listener's metrics
+# (best effort: an unreachable metrics endpoint does not fail the check).
 set -euo pipefail
 
 HERE="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"

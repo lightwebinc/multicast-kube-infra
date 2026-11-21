@@ -65,11 +65,14 @@ scrape_configs:
       - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
         action: replace
         target_label: __address__
-        regex: ([^:]+)(?::\d+)?;(\d+)
+        # (.+?) keeps a bracketed IPv6 host ("[2001:db8::5]") whole.
+        regex: (.+?)(?::\d+)?;(\d+)
         replacement: $1:$2
 ```
 
-The simpler `static_configs` route via Service ClusterIPs also works:
+For a quick check, `static_configs` against the Service ClusterIPs also
+works, but each scrape reaches one backend, so with several replicas it does
+not collect every pod's metrics (use the pod discovery above for that):
 
 ```yaml
   - job_name: bsv-mcast-proxy
