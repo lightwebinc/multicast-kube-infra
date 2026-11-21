@@ -17,9 +17,9 @@ layer (`apps/`) consume only a `KUBECONFIG`. The shipped distribution is **k0s**
 ## Quickstart (k0s reference)
 
 ```bash
-# 1. Copy and edit examples; these files are .gitignored.
+# 1. Copy and edit examples; these files are .gitignored. (k0sctl.yaml is not
+#    copied: bootstrap renders it from k0sctl.yaml.example on every run.)
 cp distributions/k0s/hosts.example.env       distributions/k0s/hosts.env
-cp distributions/k0s/k0sctl.yaml.example     distributions/k0s/k0sctl.yaml
 cp distributions/k0s/k0s-config.yaml.example distributions/k0s/k0s-config.yaml
 cp apps/environments/production.yaml.example apps/environments/production.yaml
 

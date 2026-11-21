@@ -29,12 +29,11 @@ kubectl apply -k platform/sriov
 ## Hardware-gated: not provable without SR-IOV NICs
 
 The device plugin advertises **`lightweb.net/mcast_vf: 0`** until it runs on a node with
-**real SR-IOV PFs** whose vendor/driver/`pfNames` match `configmap.yaml`. On
-virtio/LXD lab NICs there are no VFs, so VF allocation and zero-copy **cannot** be
-validated here; they are validated on a physical SR-IOV-capable perf node, not in the
-functional lab. What *is* validated in the lab (no special hardware): the kustomize
-build, the DaemonSets scheduling onto the tainted pool, and the Guaranteed-QoS exclusive
--core + hugepages + memlock scheduling.
+**real SR-IOV PFs** whose vendor/driver/`pfNames` match `configmap.yaml`. Virtual NICs
+(virtio) expose no VFs, so VF allocation and zero-copy need a physical
+SR-IOV-capable node. What needs no special hardware: the kustomize build, the
+DaemonSets scheduling onto the tainted pool, and the Guaranteed-QoS exclusive-core +
+hugepages + memlock scheduling.
 
 ## Tuning to the real NIC
 

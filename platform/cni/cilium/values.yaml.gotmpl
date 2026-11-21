@@ -1,7 +1,7 @@
 # Cilium values: primary CNI replacement.
 #
-# k0s sets `provider: custom` so kube-proxy is NOT installed by k0s; Cilium
-# replaces it. Adjust if running with kube-proxy enabled.
+# The k0s config example sets `kubeProxy.disabled: true`, so kube-proxy is NOT
+# installed by k0s; Cilium replaces it. Adjust if running with kube-proxy enabled.
 
 kubeProxyReplacement: true
 

@@ -4,8 +4,8 @@
 
 | Layer | Carries | Implementation |
 |---|---|---|
-| Primary CNI         | control + metrics + NACK/ACK + beacons (over IPv6 unicast) | Calico / Cilium / kube-router |
-| Multus secondary `net1` | IPv6 multicast frame data plane | macvlan over the dedicated fabric NIC |
+| Primary CNI         | Kubernetes control traffic, metrics and probes | Calico / Cilium / kube-router |
+| Multus secondary `net1` | IPv6 multicast frame data plane, BRC-126 beacons, and NACK/ACK unicast to the retry endpoints' fabric addresses | macvlan over the dedicated fabric NIC |
 
 Pod annotation:
 

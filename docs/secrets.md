@@ -7,8 +7,8 @@ See also [`platform/secrets/README.md`](../platform/secrets/README.md).
 Nothing secret is committed. The `.gitignore` covers:
 
 - `hosts.env` (operator SSH config)
-- `k0sctl.yaml`, `k0s-config.yaml` (rendered from `*.example.*`)
-- `apps/environments/production.yaml` (rendered from `production.yaml.example`)
+- `k0sctl.yaml` (rendered by `bootstrap.sh`), `k0s-config.yaml` (operator copy of the example)
+- `apps/environments/production.yaml` (operator copy of `production.yaml.example`)
 - `.kube/` (kubeconfigs)
 - `secrets/` (any operator-local secret material)
 

@@ -4,7 +4,7 @@
 
 | Symptom | Likely cause | Fix |
 |---|---|---|
-| `permission denied (publickey)` | `SSH_KEY` not loaded | Ensure `ssh-add` or correct `keyPath` in `k0sctl.yaml`. |
+| `permission denied (publickey)` | `SSH_KEY` not loaded | Ensure `ssh-add` or correct `SSH_KEY` in `hosts.env` (rendered into `keyPath`). |
 | `k0sctl: cannot find binary` | `k0sctl` missing from `$PATH` | Install from https://github.com/k0sproject/k0sctl/releases. |
 | Kubeconfig empty after fetch | `k0sctl apply` partially failed | Check `~/.k0sctl/log.txt`; re-run after fix. |
 

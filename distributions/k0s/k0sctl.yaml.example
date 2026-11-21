@@ -1,8 +1,6 @@
-# k0sctl cluster spec: copy to k0sctl.yaml and edit.
-#
-# Render with envsubst before applying:
-#   envsubst < k0sctl.yaml.example > k0sctl.yaml
-# (bootstrap.sh does this automatically.)
+# k0sctl cluster spec template. Edit this file: bootstrap.sh renders it into
+# k0sctl.yaml on every run (envsubst over the hosts.env variables, with
+# k0s-config.yaml inlined below), overwriting any edit made to the rendered copy.
 #
 # Single-node lab default below (one controller+worker). Two scale-out shapes:
 #   * add `- role: worker` hosts for more capacity (keep the single controller);
