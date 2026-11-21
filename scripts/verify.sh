@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
-# Smoke verification: pods Ready, listener metric endpoint reachable, frames
-# observed after a synthetic subtx-gen burst.
+# Smoke verification: pods Ready, listener metric endpoint reachable.
 set -euo pipefail
 
 HERE="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"

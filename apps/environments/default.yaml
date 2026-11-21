@@ -6,7 +6,7 @@ namespace: bsv-mcast
 # Pinned chart versions; each must be a chart version actually PUBLISHED to
 # oci://ghcr.io/lightwebinc/charts (a repo's Chart.yaml is typically one ahead of
 # what is published; pinning that unreleased version fails the pull). Bump in
-# lockstep when releasing new chart artefacts.
+# lockstep when releasing new chart artifacts.
 chartVersions:
   proxy: "0.7.11"          # appVersion 1.43.1
   listener: "0.8.4"        # appVersion 1.35.1
@@ -30,11 +30,12 @@ shared:
   # static IPAM, so publishers have no distinct per-pod source address and the
   # listener DaemonSet cannot hold one at all; both are prerequisites for SSM.
   # The charts default to ssm; their schemas do NOT enforce a bindSource, but
-  # the binaries fail fast at startup under ssm without one (proxy/retry:
-  # bindSource; listener: ssmBootstrap.* or ssmPublishersStatic), so asm must
-  # be stated here.
+  # the binaries fail fast at startup under ssm without their sources (proxy:
+  # bindSource; listener and retry: ssmBootstrap.* or ssmPublishersStatic), so
+  # asm must be stated here.
   # For ssm: give each publisher a unique bindSource (dynamic IPAM/Whereabouts),
-  # and set ssmPublishersStatic or ssmBootstrap.* on the listener.
+  # and set ssmPublishersStatic or ssmBootstrap.* on the listener and the retry
+  # endpoints.
   sourceMode: "asm"
 
 # Networking mode for the workload pods (chart value `networking.mode`).

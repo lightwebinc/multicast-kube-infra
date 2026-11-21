@@ -18,7 +18,7 @@ platform/secrets/*
 !platform/secrets/external-secrets/*.gotmpl
 *.local.env
 
-# Helm / Helmfile artefacts
+# Helm / Helmfile artifacts
 .helmfile/
 charts/
 *.tgz

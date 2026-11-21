@@ -12,7 +12,7 @@ Every `distributions/<dist>/` directory must satisfy this contract so that the
 | `README.md`    | Operator-facing notes: prerequisites, expansion paths, caveats.                                                                    |
 | `*.example.*`  | Templates for any operator-supplied configuration. The non-example variants are `.gitignored`.                                     |
 
-## Required behaviour
+## Required behavior
 
 1. **Idempotent**: re-running `bootstrap.sh` against a healthy cluster must
    succeed without changes (ideally a no-op).

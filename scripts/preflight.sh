@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Preflight checks: tools present, hosts reachable, kernel sysctl-ready.
+# Preflight checks: tools present, hosts reachable.
 set -euo pipefail
 
 HERE="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"

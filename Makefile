@@ -15,14 +15,14 @@ export DIST CNI ENV KUBECONFIG_PATH
 .PHONY: help
 help:
 	@echo 'Targets:'
-	@echo '  make preflight     SSH + sysctl reachability checks'
+	@echo '  make preflight     Tool presence + SSH reachability checks'
 	@echo '  make bootstrap     Bring up the cluster ($(DIST))'
 	@echo '  make platform      Install CNI ($(CNI)) + Multus + ESO + NADs'
 	@echo '  make apps          Install bitcoin workloads via Helmfile (env=$(ENV))'
-	@echo '  make verify        Smoke test (frames flow, beacons received)'
+	@echo '  make verify        Smoke test (pods Ready, listener metrics reachable)'
 	@echo '  make all           preflight -> bootstrap -> platform -> apps -> verify'
 	@echo '  make teardown      Reverse: apps -> platform -> cluster'
-	@echo '  make lint          helmfile lint + helm template smoke + yamllint'
+	@echo '  make lint          shellcheck + yamllint + helmfile lint'
 	@echo ''
 	@echo 'Variables: DIST=$(DIST)  CNI=$(CNI)  ENV=$(ENV)'
 

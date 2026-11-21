@@ -40,7 +40,10 @@ See [`quickstart-k0s.md`](quickstart-k0s.md) §4.
 ## Metrics
 
 External Prometheus scrapes the **primary CNI** pod IPs. The macvlan
-secondary (`net1`) carries multicast data only; never scrape it.
+secondary (`net1`) carries the fabric data plane only; never scrape it. The
+charts set no `prometheus.io/*` pod annotations, so add `prometheus.io/scrape:
+"true"` and `prometheus.io/port` through each release's `podAnnotations` for the
+job below to keep the pods.
 
 ```yaml
 # prometheus.yml: Kubernetes SD against the k0s API
@@ -59,7 +62,7 @@ scrape_configs:
       - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
         action: keep
         regex: "true"
-      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_port]
+      - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
         action: replace
         target_label: __address__
         regex: ([^:]+)(?::\d+)?;(\d+)
@@ -71,10 +74,10 @@ The simpler `static_configs` route via Service ClusterIPs also works:
 ```yaml
   - job_name: bsv-mcast-proxy
     static_configs:
-      - targets: ['proxy.bsv-mcast.svc.cluster.local:9100']
+      - targets: ['proxy-shard-proxy.bsv-mcast.svc.cluster.local:9100']
   - job_name: bsv-mcast-listener
     static_configs:
-      - targets: ['listener.bsv-mcast.svc.cluster.local:9200']
+      - targets: ['listener-shard-listener.bsv-mcast.svc.cluster.local:9200']
 ```
 
 The charts ship `ServiceMonitor` templates (gated by
