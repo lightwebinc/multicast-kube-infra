@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Smoke verification: pods Ready; prints a sample of one listener's metrics
+# Smoke verification: proxy and listener pods must be Ready; retry endpoints
+# are waited for but not required; prints a sample of one listener's metrics
 # (best effort: an unreachable metrics endpoint does not fail the check).
 set -euo pipefail
 

@@ -62,17 +62,26 @@ scrape_configs:
       - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
         action: keep
         regex: "true"
-      - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+      # Build the target from the pod IP, so a pod with no declared port and
+      # an IPv6 pod IP both work: the first rule matches an IPv6 address and
+      # brackets it, the second an IPv4 one.
+      - source_labels: [__meta_kubernetes_pod_ip, __meta_kubernetes_pod_annotation_prometheus_io_port]
         action: replace
         target_label: __address__
-        # (.+?) keeps a bracketed IPv6 host ("[2001:db8::5]") whole.
-        regex: (.+?)(?::\d+)?;(\d+)
+        regex: (.+:.+);(\d+)
+        replacement: '[$1]:$2'
+      - source_labels: [__meta_kubernetes_pod_ip, __meta_kubernetes_pod_annotation_prometheus_io_port]
+        action: replace
+        target_label: __address__
+        regex: ([^:]+);(\d+)
         replacement: $1:$2
 ```
 
-For a quick check, `static_configs` against the Service ClusterIPs also
-works, but each scrape reaches one backend, so with several replicas it does
-not collect every pod's metrics (use the pod discovery above for that):
+For a quick check from a Prometheus running inside the cluster (ClusterIPs
+and `*.svc.cluster.local` names resolve and route only there), `static_configs`
+against the Services also works, but each scrape reaches one backend, so with
+several replicas it does not collect every pod's metrics (use the pod
+discovery above for that):
 
 ```yaml
   - job_name: bsv-mcast-proxy

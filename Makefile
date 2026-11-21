@@ -19,7 +19,7 @@ help:
 	@echo '  make bootstrap     Bring up the cluster ($(DIST))'
 	@echo '  make platform      Install CNI ($(CNI)) + Multus + ESO + NADs'
 	@echo '  make apps          Install bitcoin workloads via Helmfile (env=$(ENV))'
-	@echo '  make verify        Smoke test (pods Ready; listener metrics sampled, best effort)'
+	@echo '  make verify        Smoke test (proxy and listener Ready; metrics sampled, best effort)'
 	@echo '  make all           preflight -> bootstrap -> platform -> apps -> verify'
 	@echo '  make teardown      Reverse: apps -> platform -> cluster'
 	@echo '  make lint          shellcheck + yamllint + helmfile lint'
