@@ -14,7 +14,7 @@ metadata:
   annotations:
     k8s.v1.cni.cncf.io/networks: |
       [{ "name": "mcast-fabric", "interface": "net1",
-         "ips": ["fd20::21/64"] }]
+         "ips": ["2001:db8::21/64"] }]
 ```
 
 The chart's `networking.mode: multus` value renders this annotation
