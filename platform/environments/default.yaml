@@ -16,10 +16,6 @@ fabricIface: "enp5s0"
 k8sServiceHost: "127.0.0.1"
 k8sServicePort: "7443"
 
-# IPv6 multicast subnet that sits on the fabric NIC (matches the fd20::/64
-# convention used elsewhere in the bsv-multicast docs).
-fabricSubnet: "fd20::/64"
-
 # Cilium autoDirectNodeRoutes: install direct routes for remote pod CIDRs via node IPs.
 # REQUIRED on L2-adjacent clusters (all nodes on one subnet, e.g. a single L2
 # subnet such as 192.0.2.0/24) so HOST-origin traffic reaches remote pods; the konnectivity-agent
